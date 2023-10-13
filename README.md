@@ -46,3 +46,17 @@ dart pub run routefly
 ```
 Use esse comando toda vez que criar uma nova pasta com uma página para gerar a rota novamente.
 
+
+## Navegação
+
+Utilize:
+
+```dart
+// Navegação direta
+Routefly.navigate('path');
+// Adicionar rota na pilha
+Routefly.push('path');
+// Remover ultima rota da pilha
+Routefly.pop();
+
+```
