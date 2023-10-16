@@ -9,6 +9,9 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
   RouteflyRouterDelegate(this._observers);
 
   @override
+  RouteEntity? get currentConfiguration => configurations.isEmpty ? null : configurations.last;
+
+  @override
   Widget build(BuildContext context) {
     if (configurations.isEmpty) {
       return const Material();
