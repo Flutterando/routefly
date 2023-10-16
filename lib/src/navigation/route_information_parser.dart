@@ -1,18 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:routefly/routefly.dart';
-import 'package:routefly/src/url_service/url_service.dart';
+import 'package:routefly/src/entities/route_aggregate.dart';
+import 'package:routefly/src/navigation/url_service/url_service.dart';
 
 class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
-  final List<RouteEntity> routes;
+  final RouteAggregate aggregate;
 
   bool _firstAccess = true;
 
-  RouteflyInformationParser(this.routes);
+  RouteflyInformationParser(this.aggregate);
 
   @override
   Future<RouteEntity> parseRouteInformation(RouteInformation routeInformation) async {
     final urlService = UrlService.create();
-    final type = routeInformation.state as RouteType;
+    final request = routeInformation.state as RouteRequest;
 
     String path = routeInformation.uri.path;
     if (_firstAccess) {
@@ -21,11 +22,22 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
       _firstAccess = false;
     }
 
-    return routes.firstWhere((r) => r.path == path).copyWith(type: type);
+    return aggregate
+        .findRoute(path) //
+        .copyWith(
+          type: request.type,
+          arguments: request.arguments,
+        );
   }
 
   @override
   RouteInformation restoreRouteInformation(RouteEntity configuration) {
-    return RouteInformation(uri: Uri.parse(configuration.path), state: configuration.type);
+    return RouteInformation(
+      uri: configuration.uri,
+      state: RouteRequest(
+        arguments: configuration.arguments,
+        type: configuration.type,
+      ),
+    );
   }
 }

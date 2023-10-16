@@ -1,6 +1,80 @@
 import 'dart:io';
 
 void main(List<String> args) {
+  final flag = args.isEmpty ? '--generate' : args.first;
+  final verbose = args.contains('--verbose');
+
+  if (flag == '--generate') {
+    _generate();
+  } else if (flag == '--watch') {
+    _watch(verbose);
+  } else if (flag == '--init') {
+    _init(verbose);
+  }
+}
+
+void _init(bool verbose) {
+  final dir = Directory('./lib/app');
+  final appWidget = File('${dir.path}/app_widget.dart');
+  final appPage = File('${dir.path}/app_page.dart');
+
+  if (appWidget.existsSync() || appPage.existsSync()) {
+    return;
+  }
+
+  appWidget.createSync(recursive: true);
+  appPage.createSync(recursive: true);
+
+  appWidget.writeAsStringSync('''import 'package:flutter/material.dart';
+import 'package:routefly/routefly.dart';
+
+import '../routes.dart';
+
+class AppWidget extends StatelessWidget {
+  const AppWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: Routefly.routerConfig(
+        routes: routes,
+      ),
+    );
+  }
+}
+''');
+  appPage.writeAsStringSync('''import 'package:flutter/material.dart';
+
+class AppPage extends StatelessWidget {
+  const AppPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+''');
+
+  _generate();
+}
+
+void _watch(bool verbose) {
+  final dir = Directory('./lib/app');
+
+  _generate();
+  dir.watch(events: FileSystemEvent.all, recursive: true).listen((event) {
+    try {
+      _generate();
+      print('---WATCHING---');
+    } catch (e) {
+      if (verbose) {
+        print(e);
+      }
+    }
+  });
+}
+
+void _generate() {
   final dir = Directory('./lib/app');
 
   final files = dir
@@ -12,7 +86,6 @@ void main(List<String> args) {
   final routeContent = files.map(_mapToEntity).join(',');
 
   final routeFileContent = '''${_generateImports(files)}
-
 final routes = <RouteEntity>[
   $routeContent,
 ];''';
@@ -20,7 +93,7 @@ final routes = <RouteEntity>[
   final routeFile = File('./lib/routes.dart');
   routeFile.writeAsStringSync(routeFileContent);
 
-  print('Route Generated!🚀');
+  print('Routes Generated!🚀');
 }
 
 String _generateImports(List<File> files) {
@@ -37,20 +110,25 @@ $imports
 
 String _mapToEntity(File file) {
   return '''RouteEntity(
-  path: '${_pathResolve(file)}',
-  page: ${_getPageOrRouteName(file)},
-)''';
+    uri: Uri.parse('${_pathResolve(file)}'),
+    ${_getPageOrRouteName(file)},
+  )''';
 }
 
 String _getPageOrRouteName(File file) {
   final content = file.readAsLinesSync();
   final line = content.firstWhere((line) => line.contains(RegExp(r'class \w+Page ')));
+  final routeBuilderLine = content.firstWhere((line) => line.contains('Route routeBuilder(BuildContext context, RouteSettings settings)'), orElse: () => '');
   final className = line.replaceFirst('class ', '').replaceFirst(RegExp(r' extends.+'), '');
 
-  if (line.contains('extends Page')) {
-    return '$className()';
+  if (routeBuilderLine.isNotEmpty) {
+    return 'routeBuilder: routeBuilder';
   }
-  return 'const MaterialPage(child: $className())';
+
+  return '''routeBuilder: (ctx, settings) => MaterialPageRoute(
+      settings: settings,
+      builder: (context) => const $className(),
+    )''';
 }
 
 String _pathResolve(File file) {
@@ -63,5 +141,5 @@ String _pathResolve(File file) {
 
   path = (path.split('/')..removeLast()).join('/');
 
-  return path;
+  return path.isEmpty ? '/' : path;
 }
