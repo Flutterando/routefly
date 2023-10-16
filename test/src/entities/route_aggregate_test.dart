@@ -4,38 +4,38 @@ import 'package:routefly/routefly.dart';
 import 'package:routefly/src/entities/route_aggregate.dart';
 
 void main() {
-  final page = MaterialPage(child: Container());
+  routeBuilder(c, s) => MaterialPageRoute(builder: (_) => Container());
 
   test('Order Routes', () {
     final aggregate = RouteAggregate(routes: [
-      RouteEntity(uri: Uri.parse('/user/edit'), page: page),
-      RouteEntity(uri: Uri.parse('user/edit/[id]'), page: page),
-      RouteEntity(uri: Uri.parse('/product'), page: page),
-      RouteEntity(uri: Uri.parse('/product/edit/test'), page: page),
-      RouteEntity(uri: Uri.parse('/product/[id]'), page: page),
-      RouteEntity(uri: Uri.parse('/[test]'), page: page),
+      RouteEntity(uri: Uri.parse('/user/edit'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('user/edit/[id]'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/product'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/product/edit/test'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/product/[id]'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/[test]'), routeBuilder: routeBuilder),
     ], notFoundPath: '/404');
 
     expect(
         aggregate.routes,
         equals([
-          RouteEntity(uri: Uri.parse('/product'), page: page),
-          RouteEntity(uri: Uri.parse('/user/edit'), page: page),
-          RouteEntity(uri: Uri.parse('/product/edit/test'), page: page),
-          RouteEntity(uri: Uri.parse('/[test]'), page: page),
-          RouteEntity(uri: Uri.parse('/product/[id]'), page: page),
-          RouteEntity(uri: Uri.parse('user/edit/[id]'), page: page),
+          RouteEntity(uri: Uri.parse('/product'), routeBuilder: routeBuilder),
+          RouteEntity(uri: Uri.parse('/user/edit'), routeBuilder: routeBuilder),
+          RouteEntity(uri: Uri.parse('/product/edit/test'), routeBuilder: routeBuilder),
+          RouteEntity(uri: Uri.parse('/[test]'), routeBuilder: routeBuilder),
+          RouteEntity(uri: Uri.parse('/product/[id]'), routeBuilder: routeBuilder),
+          RouteEntity(uri: Uri.parse('user/edit/[id]'), routeBuilder: routeBuilder),
         ]));
   });
 
   test('find Routes', () {
     final aggregate = RouteAggregate(routes: [
-      RouteEntity(uri: Uri.parse('/user/edit'), page: page),
-      RouteEntity(uri: Uri.parse('user/edit/[id]'), page: page),
-      RouteEntity(uri: Uri.parse('/product'), page: page),
-      RouteEntity(uri: Uri.parse('/product/edit/test'), page: page),
-      RouteEntity(uri: Uri.parse('/product/[id]'), page: page),
-      RouteEntity(uri: Uri.parse('/[test]'), page: page),
+      RouteEntity(uri: Uri.parse('/user/edit'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('user/edit/[id]'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/product'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/product/edit/test'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/product/[id]'), routeBuilder: routeBuilder),
+      RouteEntity(uri: Uri.parse('/[test]'), routeBuilder: routeBuilder),
     ], notFoundPath: '/404');
 
     expect(aggregate.findRoute('/product'), isNotNull);

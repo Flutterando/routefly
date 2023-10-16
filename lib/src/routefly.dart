@@ -14,6 +14,7 @@ class Routefly {
     return _delegate!;
   }
 
+  /// Replaces the entire route stack with the requested one
   static void navigate(String path, {dynamic arguments}) {
     _verifyInitialization();
 
@@ -28,6 +29,7 @@ class Routefly {
     );
   }
 
+  /// Replaces the last route in the stack with the requested one
   static void replace(String path, {dynamic arguments}) {
     _verifyInitialization();
 
@@ -42,6 +44,7 @@ class Routefly {
     );
   }
 
+  /// Add route to stack
   static void push(String path, {dynamic arguments}) {
     _verifyInitialization();
 
@@ -56,6 +59,7 @@ class Routefly {
     );
   }
 
+  /// Remove route to stack
   static void pop() {
     _verifyInitialization();
 
@@ -80,6 +84,7 @@ class Routefly {
     }
   }
 
+  /// Navigator 2.0 configurations
   static RouterConfig<Object>? routerConfig({
     String initialPath = '',
     required List<RouteEntity> routes,
@@ -107,6 +112,7 @@ class Routefly {
   }
 }
 
+/// Route Parameters
 class RouteflyQuery {
   final Map<String, dynamic> _data;
   final Map<String, String> params;

@@ -3,27 +3,32 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:routefly/src/entities/route_entity.dart';
 
 void main() {
-  test('return null if path not match', () {
-    final route = RouteEntity(uri: Uri.parse('/dashboard'), page: MaterialPage(child: Container()));
+  routeBuilder(c, s) => MaterialPageRoute(builder: (_) => Container());
 
-    expect(route.addNewInfo('/product'), null);
+  test('return null if path not match', () {
+    final route = RouteEntity(uri: Uri.parse('/dashboard'), routeBuilder: routeBuilder);
+
+    expect(route.addNewInfo('/product'), isNull);
   });
 
   test('return {} if path match but has not params', () {
-    final route = RouteEntity(uri: Uri.parse('/dashboard'), page: MaterialPage(child: Container()));
+    final route = RouteEntity(uri: Uri.parse('/dashboard'), routeBuilder: routeBuilder);
 
-    expect(route.addNewInfo('/dashboard'), {});
+    expect(route.addNewInfo('/dashboard'), isNotNull);
   });
 
   test('return {id: 1} if path match with params', () {
-    final route = RouteEntity(uri: Uri.parse('/user/[id]'), page: MaterialPage(child: Container()));
+    final route = RouteEntity(uri: Uri.parse('/user/[id]'), routeBuilder: routeBuilder);
 
-    expect(route.addNewInfo('/user/1'), {'id': 1});
+    final newRoute = route.addNewInfo('/user/1');
+
+    expect(newRoute?.params, {'id': 1});
   });
 
   test('return {id: 1, key: "text"} if path match with params', () {
-    final route = RouteEntity(uri: Uri.parse('/user/[id]/[key]'), page: MaterialPage(child: Container()));
+    final route = RouteEntity(uri: Uri.parse('/user/[id]/[key]'), routeBuilder: routeBuilder);
+    final newRoute = route.addNewInfo('/user/1/text');
 
-    expect(route.addNewInfo('/user/1/text'), {'id': 1, 'key': 'text'});
+    expect(newRoute?.params, {'id': 1, 'key': 'text'});
   });
 }

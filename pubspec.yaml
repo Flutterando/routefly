@@ -1,6 +1,6 @@
 name: routefly
-description: Gerenciador de rotas baseadas em pastas inspirado no NextJS
-version: 0.0.1
+description: Folder-based route manager inspired by NextJS and created by the Flutterando community.
+version: 0.0.2
 repository: https://github.com/Flutterando/routefly
 
 environment:
