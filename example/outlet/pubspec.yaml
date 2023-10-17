@@ -29,7 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   routefly:
-    path: ../
+    path: ../../
   flutter:
     sdk: flutter
   flutter_web_plugins:
