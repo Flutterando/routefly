@@ -53,7 +53,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
             const Expanded(
               flex: 3,
               child: RouterOutlet(),
-            )
+            ),
           ],
         ),
       ),

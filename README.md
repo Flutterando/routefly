@@ -90,6 +90,7 @@ To create custom route transitions, define a routeBuilder function in your page 
 ```dart
 Route routeBuilder(BuildContext context, RouteSettings settings) {
   return PageRouteBuilder(
+    settings: settings // <- !! DON'T FORGET THAT !!
     pageBuilder: (_, a1, a2) => const UserPage(),
     transitionsBuilder: (_, a1, a2, child) {
       return FadeTransition(opacity: a1, child: child);
@@ -97,6 +98,40 @@ Route routeBuilder(BuildContext context, RouteSettings settings) {
   );
 }
 ```
+
+
+## Layout (RouterOutlet)
+
+Layout são páginas que aceitam navegação aninhada. Todas as rotas filhas ao layout será apontada como filha na navegação.
+
+```
+.
+└── app/
+    └── dashboard/
+        ├── users/
+        │   └── users_page.dart
+        ├── products/
+        │   └── products_page.dart
+        └── dashboard_layout.dart
+```
+
+Para criar um layout crie a pasta a qual pertencerá e adicione um arquivo `*_layout.dart`. As pastas filhas devem ficar dentro da pasta parent do layout.
+
+No Widget do layout adicione `RouterOutlet()` aonde preferir que as rotas aninhadas apareçam.
+ex:
+
+```dart
+...
+Expanded(
+    flex: 3,
+    child: RouterOutlet(),
+),
+...
+
+```
+
+
+
 
 If you have any questions or need assistance with the package, feel free to reach out to the `Flutterando` community.
 
