@@ -32,20 +32,27 @@ class RouteAggregate {
   }
 
   RouteEntity findRoute(String path) {
+    RouteEntity? findedRoute = _findRoute(path);
+
+    if (findedRoute != null && findedRoute.parent.isNotEmpty) {
+      final parent = _findRoute(findedRoute.parent);
+      if (parent != null) {
+        return findedRoute.copyWith(parentEntity: parent);
+      }
+    } else if (findedRoute != null) {
+      return findedRoute;
+    }
+
+    throw RouteflyException('Route ($path) not found');
+  }
+
+  RouteEntity? _findRoute(String path) {
     for (var route in routes) {
       final candidate = route.addNewInfo(path);
       if (candidate != null) {
         return candidate;
       }
     }
-
-    for (var route in routes) {
-      final candidate = route.addNewInfo(notFoundPath);
-      if (candidate != null) {
-        return candidate;
-      }
-    }
-
-    throw RouteflyException('Route ($path) not found');
+    return null;
   }
 }

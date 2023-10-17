@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
+import 'custom_navigator.dart';
+import 'inherited_routefly.dart';
+import 'routefly_page.dart';
+
 class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNotifier {
   final List<NavigatorObserver> _observers;
 
@@ -9,7 +13,10 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
   RouteflyRouterDelegate(this._observers);
 
   @override
-  RouteEntity? get currentConfiguration => configurations.isEmpty ? null : configurations.last;
+  RouteEntity? get currentConfiguration {
+    final navigationConfigurations = configurations.where((e) => e.type == RouteType.navigate);
+    return navigationConfigurations.isEmpty ? null : navigationConfigurations.last;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +24,21 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
       return const Material();
     }
 
-    return _CustomNavigator(
-      observers: _observers,
-      pages: configurations.map((e) => e.page).toList(),
-      onPopPage: _onPopPage,
+    return InheritedRoutefly(
+      child: CustomNavigator(
+        observers: _observers,
+        pages: configurations.where((e) => e.parent.isEmpty).map((e) => e.page).toList(),
+        onPopPage: onPopPage,
+      ),
     );
   }
 
-  bool _onPopPage(Route<dynamic> route, dynamic result) {
+  bool onPopPage(Route<dynamic> route, dynamic result) {
     if (!route.didPop(result) || route.isFirst) {
       return false;
     }
 
-    final page = route.settings as _RouteflyPage;
+    final page = route.settings as RouteflyPage;
     configurations.removeWhere((e) => e.page.key == page.key);
     notifyListeners();
 
@@ -50,75 +59,49 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
 
   @override
   Future<void> setNewRoutePath(RouteEntity configuration) async {
-    final route = _prepareRoute(configuration);
+    final routes = _resolveRoute(configuration);
 
-    if (route.type == RouteType.navigate) {
-      configurations = [route];
-    } else if (route.type == RouteType.replace) {
+    if (configuration.type == RouteType.navigate) {
+      configurations = _across(routes);
+    } else if (configuration.type == RouteType.replace) {
       configurations.removeLast();
-      configurations = [...configurations, route];
     } else {
-      configurations = [...configurations, route];
+      configurations = [...configurations, _prepareRoute(configuration)];
     }
 
     notifyListeners();
   }
 
+  List<RouteEntity> _across(List<RouteEntity> routes) {
+    final List<RouteEntity> newRoutes = [];
+
+    for (var route in routes) {
+      final index = configurations.indexOf(route);
+      if (index == -1) {
+        newRoutes.add(route);
+      } else {
+        newRoutes.add(configurations[index]);
+      }
+    }
+
+    return newRoutes;
+  }
+
+  List<RouteEntity> _resolveRoute(RouteEntity configuration) {
+    List<RouteEntity> routes = [];
+
+    RouteEntity? route = configuration;
+
+    while (route != null) {
+      routes.insert(0, _prepareRoute(route));
+      route = route.parentEntity;
+    }
+
+    return routes;
+  }
+
   RouteEntity _prepareRoute(RouteEntity configuration) {
     final count = configurations.where((r) => r == configuration).length;
-    return configuration.copyWith(page: _RouteflyPage.fromEntity(configuration, count));
-  }
-}
-
-class _RouteflyPage extends Page {
-  final RouteEntity entity;
-
-  const _RouteflyPage({
-    required this.entity,
-    required super.name,
-    required super.arguments,
-    required super.key,
-  });
-
-  factory _RouteflyPage.fromEntity(RouteEntity entity, int count) {
-    final key = ValueKey('${entity.uri.path}@$count');
-
-    return _RouteflyPage(
-      entity: entity,
-      name: entity.uri.path,
-      arguments: entity.arguments,
-      key: key,
-    );
-  }
-
-  @override
-  Route createRoute(BuildContext context) {
-    final route = entity.routeBuilder(context, this);
-    return route;
-  }
-}
-
-class _CustomNavigator extends Navigator {
-  const _CustomNavigator({
-    super.pages,
-    super.onPopPage,
-    super.observers,
-  });
-
-  @override
-  NavigatorState createState() => _CustomNavigatorState();
-}
-
-class _CustomNavigatorState extends NavigatorState {
-  @override
-  Future<T?> pushNamed<T extends Object?>(String routeName, {Object? arguments}) async {
-    Routefly.push(routeName, arguments: arguments);
-    return null;
-  }
-
-  @override
-  Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(String routeName, {TO? result, Object? arguments}) async {
-    Routefly.replace(routeName, arguments: arguments);
-    return null;
+    return configuration.copyWith(page: RouteflyPage.fromEntity(configuration, count));
   }
 }

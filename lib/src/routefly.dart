@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 import 'package:routefly/src/entities/route_aggregate.dart';
+import 'package:routefly/src/navigation/routefly_page.dart';
 import 'package:routefly/src/navigation/router_delegate.dart';
 
+import 'navigation/custom_navigator.dart';
+import 'navigation/inherited_routefly.dart';
 import 'navigation/route_information_parser.dart';
 
-class Routefly {
+part 'navigation/outlet/outlet_delegate.dart';
+part 'navigation/outlet/router_outlet.dart';
+
+abstract class Routefly {
   static PlatformRouteInformationProvider? _provider;
   static RouteflyRouterDelegate? _delegate;
 
   static Listenable get listenable {
     _verifyInitialization();
     return _delegate!;
+  }
+
+  static RouteflyState of(BuildContext context) {
+    final page = ModalRoute.of(context)!.settings as RouteflyPage;
+    context.dependOnInheritedWidgetOfExactType<InheritedRoutefly>();
+    return RouteflyState(page);
   }
 
   /// Replaces the entire route stack with the requested one
@@ -71,7 +83,7 @@ class Routefly {
     return _delegate!.configurations.last;
   }
 
-  static Uri get uri => _provider!.value.uri;
+  static Uri get uri => _delegate!.currentConfiguration!.uri;
   static RouteflyQuery get query => RouteflyQuery(
         uri.queryParameters,
         _route.params,
@@ -109,18 +121,5 @@ class Routefly {
       routeInformationProvider: _provider!,
       backButtonDispatcher: RootBackButtonDispatcher(),
     );
-  }
-}
-
-/// Route Parameters
-class RouteflyQuery {
-  final Map<String, dynamic> _data;
-  final Map<String, String> params;
-  final dynamic arguments;
-
-  RouteflyQuery(this.params, this._data, this.arguments);
-
-  dynamic operator [](String key) {
-    return _data[key];
   }
 }

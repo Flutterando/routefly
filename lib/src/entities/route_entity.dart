@@ -10,12 +10,18 @@ class RouteEntity {
   final RouteBuilder routeBuilder;
   late final Page page;
   final RouteType type;
+  final String key;
+  final String parent;
+  final RouteEntity? parentEntity;
   final Map<String, dynamic> params;
   final dynamic arguments;
 
   RouteEntity({
     required this.uri,
     required this.routeBuilder,
+    required this.key,
+    this.parent = '',
+    this.parentEntity,
     Page? page,
     this.params = const {},
     this.arguments,
@@ -26,6 +32,9 @@ class RouteEntity {
 
   RouteEntity copyWith({
     Uri? uri,
+    String? parent,
+    String? key,
+    RouteEntity? parentEntity,
     RouteBuilder? routeBuilder,
     RouteType? type,
     Page? page,
@@ -34,11 +43,14 @@ class RouteEntity {
   }) {
     return RouteEntity(
       uri: uri ?? this.uri,
+      parentEntity: parentEntity ?? this.parentEntity,
       routeBuilder: routeBuilder ?? this.routeBuilder,
       type: type ?? this.type,
       page: page ?? this.page,
       arguments: arguments ?? this.arguments,
       params: params ?? this.params,
+      key: key ?? this.key,
+      parent: parent ?? this.parent,
     );
   }
 
@@ -74,19 +86,19 @@ class RouteEntity {
 
   @override
   String toString() {
-    return 'RouteEntity => ${uri.path}';
+    return 'RouteEntity => $key';
   }
 
   @override
   bool operator ==(covariant RouteEntity other) {
     if (identical(this, other)) return true;
 
-    return other.uri.path == uri.path;
+    return other.key == key;
   }
 
   @override
   int get hashCode {
-    return uri.path.hashCode;
+    return key.hashCode;
   }
 }
 
