@@ -34,6 +34,7 @@ Stream<ConsoleResponse> _startWatch(GenerateRoutes generate, Directory appDir) a
   yield const ConsoleResponse(message: '-- WATCHING --');
   yield* appDir
       .watch(events: FileSystemEvent.all, recursive: true) //
+      .where((event) => event.path.endsWith('_page.dart') || event.path.endsWith('_layout.dart'))
       .asyncExpand((event) => generate());
 }
 

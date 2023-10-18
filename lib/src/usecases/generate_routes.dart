@@ -42,15 +42,15 @@ class GenerateRoutes {
 
     var entries = <RouteRepresentation>[];
 
-    try {
-      for (var i = 0; i < files.length; i++) {
+    for (var i = 0; i < files.length; i++) {
+      try {
         entries.add(RouteRepresentation.withAppDir(appDir, files[i], i));
+      } on RouteflyException catch (e) {
+        yield ConsoleResponse(
+          message: e.message,
+          type: ConsoleResponseType.warning,
+        );
       }
-    } on RouteflyException catch (e) {
-      yield ConsoleResponse(
-        message: e.message,
-        type: ConsoleResponseType.warning,
-      );
     }
 
     entries = _addParents(entries);
@@ -58,7 +58,7 @@ class GenerateRoutes {
     final routeContent = entries.map((e) => e.toString()).join(',\n  ');
 
     final routeFileContent = '''${_generateImports(entries)}
-final routes = <RouteEntity>[
+List<RouteEntity> get routes => [
   $routeContent,
 ];''';
 
@@ -89,12 +89,8 @@ final routes = <RouteEntity>[
   }
 
   String _generateImports(List<RouteRepresentation> entries) {
-    final files = entries.map((e) => e.file).toList();
-    final imports = files //
-        .map(
-          (file) => (file.path.replaceFirst('./lib/', '').replaceAll('\\', '/'), files.indexOf(file)),
-        )
-        .map((e) => "import '${e.$1}' as a${e.$2};")
+    final imports = entries //
+        .map((e) => e.import)
         .join('\n');
     return '''import 'package:routefly/routefly.dart';
 import 'package:flutter/material.dart';

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
@@ -11,7 +13,16 @@ class AppWidget extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: Routefly.routerConfig(
         routes: routes,
+        middlewares: [_guardRoute],
       ),
     );
   }
+}
+
+FutureOr<RouteInformation> _guardRoute(RouteInformation routeInformation) {
+  if (routeInformation.uri.path == '/guarded') {
+    return routeInformation.redirect(Uri.parse('/'));
+  }
+
+  return routeInformation;
 }

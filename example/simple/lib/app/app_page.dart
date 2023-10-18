@@ -11,11 +11,23 @@ class AppPage extends StatelessWidget {
         title: const Text('App'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Routefly.push('/users', arguments: 1);
-          },
-          child: const Text('Navegar para usuario'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Routefly.push('/users', arguments: 1);
+              },
+              child: const Text('To User'),
+            ),
+            const SizedBox(height: 5),
+            ElevatedButton(
+              onPressed: () {
+                Routefly.push('/guarded');
+              },
+              child: const Text('Guarded Route'),
+            ),
+          ],
         ),
       ),
     );

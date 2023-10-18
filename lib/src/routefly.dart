@@ -127,3 +127,14 @@ abstract class Routefly {
     );
   }
 }
+
+extension RouteInformationExtension on RouteInformation {
+  RouteInformation redirect(Uri newUri, {RouteRequest? request}) {
+    return RouteInformation(
+      uri: newUri,
+      state: request ?? state,
+    );
+  }
+
+  RouteRequest? get request => state as RouteRequest?;
+}

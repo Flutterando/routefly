@@ -85,7 +85,7 @@ import './test/mocks/app/dashboard/option1/option1_page.dart' as a2;
 import './test/mocks/app/dashboard/option2/option2_page.dart' as a3;
 import './test/mocks/app/dashboard/option3/option3_page.dart' as a4;
 
-final routes = <RouteEntity>[
+List<RouteEntity> get routes => [
   RouteEntity(
     key: '/',
     parent: '',

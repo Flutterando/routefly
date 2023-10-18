@@ -102,7 +102,7 @@ Route routeBuilder(BuildContext context, RouteSettings settings) {
 
 ## Layout (RouterOutlet)
 
-Layout são páginas que aceitam navegação aninhada. Todas as rotas filhas ao layout será apontada como filha na navegação.
+Layout are pages that support nested navigation. All child routes to the layout will be pointed out as children in the navigation.
 
 ```
 .
@@ -115,9 +115,9 @@ Layout são páginas que aceitam navegação aninhada. Todas as rotas filhas ao 
         └── dashboard_layout.dart
 ```
 
-Para criar um layout crie a pasta a qual pertencerá e adicione um arquivo `*_layout.dart`. As pastas filhas devem ficar dentro da pasta parent do layout.
+To create a layout, create the folder it will belong to and add a `*_layout.dart` file. The child folders must be inside the layout's parent folder.
 
-No Widget do layout adicione `RouterOutlet()` aonde preferir que as rotas aninhadas apareçam.
+In the Layout Widget, add `RouterOutlet()` wherever you prefer nested routes to appear.
 ex:
 
 ```dart
@@ -130,7 +130,44 @@ Expanded(
 
 ```
 
+## Middleware
 
+Middleware are functions that intercept the request and can change the route information and can cancel or redirect the route request.
+
+```dart
+FutureOr<RouteInformation> _guardRoute(RouteInformation routeInformation) {
+  if (routeInformation.uri.path == '/guarded') {
+    return routeInformation.redirect(Uri.parse('/'));
+  }
+
+  return routeInformation;
+}
+```
+
+Now add it to the initial configuration.
+
+```dart
+return MaterialApp.router(
+      routerConfig: Routefly.routerConfig(
+        routes: routes,
+        middlewares: [_guardRoute], // <<<<
+      ),
+    );
+```
+
+## Not found page (404)
+
+When creating a route with name `404`, it will be triggered when a page is not found.
+`Routefly` gives the possibility to modify the default route for unfound pages.
+
+```dart
+return MaterialApp.router(
+      routerConfig: Routefly.routerConfig(
+        routes: routes,
+        notFoundPath: '/not-found',
+      ),
+    );
+```
 
 
 If you have any questions or need assistance with the package, feel free to reach out to the `Flutterando` community.
