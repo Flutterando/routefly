@@ -1,3 +1,7 @@
+// ignore_for_file: prefer_constructors_over_static_methods
+// ignore_for_file: leading_newlines_in_multiline_strings
+// ignore_for_file: public_member_api_docs
+
 import 'dart:io';
 
 import 'package:routefly/src/exceptions/exceptions.dart';
@@ -19,7 +23,11 @@ class RouteRepresentation {
     required this.builder,
   });
 
-  static RouteRepresentation withAppDir(Directory appDir, File file, int index) {
+  static RouteRepresentation withAppDir(
+    Directory appDir,
+    File file,
+    int index,
+  ) {
     final isLayout = file.path.endsWith('_layout.dart');
     final path = _pathResolve(file, appDir);
     final builder = _getBuilder(file, index);
@@ -41,7 +49,7 @@ class RouteRepresentation {
         .replaceFirst(appDir.path, '');
 
     if (Platform.isWindows) {
-      path = path.replaceAll('\\', '/');
+      path = path.replaceAll(r'\', '/');
     }
 
     return path.isEmpty ? '/' : path;
@@ -52,7 +60,7 @@ class RouteRepresentation {
 
     for (var i = 0; i < content.length; i++) {
       var line = content[i];
-      line = line.replaceFirst(RegExp(r'//.+'), '');
+      line = line.replaceFirst(RegExp('//.+'), '');
       content[i] = line;
     }
 
@@ -63,12 +71,20 @@ class RouteRepresentation {
 
     if (line.isEmpty) {
       throw RouteflyException(
-        '${file.path.split(Platform.pathSeparator).last} don\'t contains Page or Layout Widget.',
+        '${file.path.split(Platform.pathSeparator).last} '
+        "don't contains Page or Layout Widget.",
       );
     }
 
-    final routeBuilderLine = content.firstWhere((line) => line.contains('Route routeBuilder(BuildContext context, RouteSettings settings)'), orElse: () => '');
-    final className = line.replaceFirst('class ', '').replaceFirst(RegExp(r' extends.+'), '');
+    final routeBuilderLine = content.firstWhere(
+      (line) => line.contains(
+        'Route routeBuilder(BuildContext context, RouteSettings settings)',
+      ),
+      orElse: () => '',
+    );
+    final className = line //
+        .replaceFirst('class ', '')
+        .replaceFirst(RegExp(' extends.+'), '');
 
     if (routeBuilderLine.isNotEmpty) {
       return 'a$index.routeBuilder';
@@ -81,7 +97,7 @@ class RouteRepresentation {
   }
 
   String get import {
-    final path = file.path.replaceFirst('./lib/', '').replaceAll('\\', '/');
+    final path = file.path.replaceFirst('./lib/', '').replaceAll(r'\', '/');
     return "import '$path' as a$index;";
   }
 

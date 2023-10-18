@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'io_url_service.dart'
 // for web
     if (dart.library.html) 'html_url_service.dart' as impl;

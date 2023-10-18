@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
@@ -5,17 +7,23 @@ import 'custom_navigator.dart';
 import 'inherited_routefly.dart';
 import 'routefly_page.dart';
 
-class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNotifier {
+class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
+    with
+        ChangeNotifier {
   final List<NavigatorObserver> _observers;
 
-  var configurations = <RouteEntity>[];
+  List<RouteEntity> configurations = <RouteEntity>[];
 
   RouteflyRouterDelegate(this._observers);
 
   @override
   RouteEntity? get currentConfiguration {
-    final navigationConfigurations = configurations.where((e) => e.type == RouteType.navigate);
-    return navigationConfigurations.isEmpty ? null : navigationConfigurations.last;
+    final navigationConfigurations = configurations.where(
+      (e) => e.type == RouteType.navigate,
+    );
+    return navigationConfigurations.isEmpty //
+        ? null
+        : navigationConfigurations.last;
   }
 
   @override
@@ -27,7 +35,10 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
     return InheritedRoutefly(
       child: CustomNavigator(
         observers: _observers,
-        pages: configurations.where((e) => e.parent.isEmpty).map((e) => e.page).toList(),
+        pages: configurations
+            .where((e) => e.parent.isEmpty) //
+            .map((e) => e.page)
+            .toList(),
         onPopPage: onPopPage,
       ),
     );
@@ -73,9 +84,9 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
   }
 
   List<RouteEntity> _across(List<RouteEntity> routes) {
-    final List<RouteEntity> newRoutes = [];
+    final newRoutes = <RouteEntity>[];
 
-    for (var route in routes) {
+    for (final route in routes) {
       final index = configurations.indexOf(route);
       if (index == -1) {
         newRoutes.add(route);
@@ -88,7 +99,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
   }
 
   List<RouteEntity> _resolveRoute(RouteEntity configuration) {
-    List<RouteEntity> routes = [];
+    final routes = <RouteEntity>[];
 
     RouteEntity? route = configuration;
 
@@ -102,6 +113,8 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNoti
 
   RouteEntity _prepareRoute(RouteEntity configuration) {
     final count = configurations.where((r) => r == configuration).length;
-    return configuration.copyWith(page: RouteflyPage.fromEntity(configuration, count));
+    return configuration.copyWith(
+      page: RouteflyPage.fromEntity(configuration, count),
+    );
   }
 }

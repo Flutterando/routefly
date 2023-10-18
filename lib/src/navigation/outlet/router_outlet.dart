@@ -1,6 +1,8 @@
 part of '../../routefly.dart';
 
+/// Nested Navigation.
 class RouterOutlet extends StatelessWidget {
+  /// Nested Navigation.
   const RouterOutlet({super.key});
 
   @override

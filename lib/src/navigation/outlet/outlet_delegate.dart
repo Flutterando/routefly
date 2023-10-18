@@ -1,12 +1,18 @@
+// ignore_for_file: public_member_api_docs
+
 part of '../../routefly.dart';
 
-class OutletRouterDelegate extends RouterDelegate<RouteEntity> with ChangeNotifier {
+class OutletRouterDelegate extends RouterDelegate<RouteEntity> //
+    with
+        ChangeNotifier {
   @override
   Widget build(BuildContext context) {
     final state = Routefly.of(context);
     final entity = state.route;
 
-    final configurations = Routefly._delegate!.configurations.where((e) => e.parent == entity.key);
+    final configurations = Routefly._delegate!.configurations.where(
+      (e) => e.parent == entity.key,
+    );
     if (configurations.isEmpty) {
       return Container();
     }

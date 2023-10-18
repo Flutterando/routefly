@@ -1,7 +1,9 @@
-include: package:flutter_lints/flutter.yaml
+include: package:flutterando_analysis/dart_package.yaml
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 linter: 
   rules:
     avoid_print: false
+    parameter_assignments: false
+    leading_newlines_in_multiline_strings: false

@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:routefly/src/usecases/generate_routes.dart';
 
 class FileMock implements File {
-  var contents = '';
+  String contents = '';
 
   @override
-  noSuchMethod(Invocation invocation) {
+  dynamic noSuchMethod(Invocation invocation) {
     return super.noSuchMethod(invocation);
   }
 
@@ -45,7 +45,6 @@ void main() {
     final usecase = GenerateRoutes(existsDir, routeFile);
     final response = ConsoleResponse(
       message: errorMessages.noRoutesCreated,
-      type: ConsoleResponseType.info,
     );
 
     final stream = usecase.call();
@@ -61,7 +60,7 @@ void main() {
       stream,
       emitsInOrder([
         const ConsoleResponse(
-          message: 'option4_page.dart don\'t contains Page or Layout Widget.',
+          message: "option4_page.dart don't contains Page or Layout Widget.",
           type: ConsoleResponseType.warning,
         ),
         const ConsoleResponse(

@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:flutter/widgets.dart';
 
 import '../entities/route_entity.dart';

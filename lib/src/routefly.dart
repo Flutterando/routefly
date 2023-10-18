@@ -11,15 +11,25 @@ import 'navigation/route_information_parser.dart';
 part 'navigation/outlet/outlet_delegate.dart';
 part 'navigation/outlet/router_outlet.dart';
 
+/// Routefly is a folder-based route manager inspired
+/// by NextJS and created by the Flutterando community.
+/// It allows you to automatically create routes in
+/// your Flutter app by simply organizing your code
+/// files within specific directories. When a file is added to the
+/// "pages" directory, it's automatically available as a route.
+/// Just add the appropriate folder structure inside
+/// the "lib/app" folder.
 abstract class Routefly {
   static PlatformRouteInformationProvider? _provider;
   static RouteflyRouterDelegate? _delegate;
 
+  /// Listen for route changes
   static Listenable get listenable {
     _verifyInitialization();
     return _delegate!;
   }
 
+  /// Listen for route changes by InheritedWidget
   static RouteflyState of(BuildContext context) {
     final page = ModalRoute.of(context)!.settings as RouteflyPage;
     context.dependOnInheritedWidgetOfExactType<InheritedRoutefly>();
@@ -83,7 +93,10 @@ abstract class Routefly {
     return _delegate!.configurations.last;
   }
 
+  /// Route path uri
   static Uri get uri => _delegate!.currentConfiguration!.uri;
+
+  /// Route Parameters
   static RouteflyQuery get query => RouteflyQuery(
         uri.queryParameters,
         _route.params,
@@ -92,7 +105,8 @@ abstract class Routefly {
 
   static void _verifyInitialization() {
     if (_provider == null || _delegate == null) {
-      throw RouteflyException('Routefly must be declare in MaterialApp or CupertinoApp.\nPlease, check the docs for more information.');
+      throw RouteflyException('Routefly must be declare in MaterialApp '
+          'or CupertinoApp.\nPlease, check the docs for more information.');
     }
   }
 
@@ -122,13 +136,16 @@ abstract class Routefly {
         ),
         middlewares,
       ),
-      routeInformationProvider: _provider!,
+      routeInformationProvider: _provider,
       backButtonDispatcher: RootBackButtonDispatcher(),
     );
   }
 }
 
+/// Extension of RouteInformation
 extension RouteInformationExtension on RouteInformation {
+  /// Prototype pattern for RouteInformation.<br>
+  /// Use to transform uri and request.
   RouteInformation redirect(Uri newUri, {RouteRequest? request}) {
     return RouteInformation(
       uri: newUri,
@@ -136,5 +153,6 @@ extension RouteInformationExtension on RouteInformation {
     );
   }
 
+  /// Route request object
   RouteRequest? get request => state as RouteRequest?;
 }

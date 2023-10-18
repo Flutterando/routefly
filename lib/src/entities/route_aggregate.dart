@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:routefly/src/entities/route_entity.dart';
 import 'package:routefly/src/exceptions/exceptions.dart';
 
@@ -14,8 +16,16 @@ class RouteAggregate {
 
   List<RouteEntity> _orderRoutes(List<RouteEntity> routes) {
     final copy = routes.toList();
-    final normalRoutes = copy.where((e) => !_containsParams(e.uri.pathSegments)).toList();
-    final paramsRoutes = copy.where((e) => _containsParams(e.uri.pathSegments)).toList();
+    final normalRoutes = copy
+        .where(
+          (e) => !_containsParams(e.uri.pathSegments),
+        )
+        .toList();
+    final paramsRoutes = copy
+        .where(
+          (e) => _containsParams(e.uri.pathSegments),
+        )
+        .toList();
 
     normalRoutes.sort(_compare);
     paramsRoutes.sort(_compare);
@@ -32,7 +42,7 @@ class RouteAggregate {
   }
 
   RouteEntity findRoute(String path) {
-    RouteEntity? findedRoute = _findRoute(path);
+    final findedRoute = _findRoute(path);
 
     if (findedRoute != null && findedRoute.parent.isNotEmpty) {
       final parent = _findRoute(findedRoute.parent);
@@ -47,7 +57,7 @@ class RouteAggregate {
   }
 
   RouteEntity? _findRoute(String path) {
-    for (var route in routes) {
+    for (final route in routes) {
       final candidate = route.addNewInfo(path);
       if (candidate != null) {
         return candidate;

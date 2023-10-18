@@ -23,18 +23,26 @@ Future<void> main(List<String> args) async {
   }
 
   if (stream != null) {
-    await for (var c in stream) {
+    await for (final c in stream) {
       c.log();
     }
   }
 }
 
-Stream<ConsoleResponse> _startWatch(GenerateRoutes generate, Directory appDir) async* {
+Stream<ConsoleResponse> _startWatch(
+  GenerateRoutes generate,
+  Directory appDir,
+) async* {
   yield* generate();
   yield const ConsoleResponse(message: '-- WATCHING --');
   yield* appDir
-      .watch(events: FileSystemEvent.all, recursive: true) //
-      .where((event) => event.path.endsWith('_page.dart') || event.path.endsWith('_layout.dart'))
+      .watch(recursive: true) //
+      .where(
+        (event) =>
+            event.path.endsWith('_page.dart') //
+            ||
+            event.path.endsWith('_layout.dart'),
+      )
       .asyncExpand((event) => generate());
 }
 
@@ -49,7 +57,8 @@ void _init(GenerateRoutes generate, Directory appDir) {
   appWidget.createSync(recursive: true);
   appPage.createSync(recursive: true);
 
-  appWidget.writeAsStringSync('''import 'package:flutter/material.dart';
+  appWidget.writeAsStringSync('''
+import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
 import '../routes.dart';
@@ -67,7 +76,8 @@ class AppWidget extends StatelessWidget {
   }
 }
 ''');
-  appPage.writeAsStringSync('''import 'package:flutter/material.dart';
+  appPage.writeAsStringSync('''
+import 'package:flutter/material.dart';
 
 class AppPage extends StatelessWidget {
   const AppPage({super.key});

@@ -3,8 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-typedef RouteBuilder = Route Function(BuildContext context, RouteSettings settings);
+typedef RouteBuilder = Route Function(
+  BuildContext context,
+  RouteSettings settings,
+);
 
+@immutable
 class RouteEntity {
   final Uri uri;
   final RouteBuilder routeBuilder;
@@ -119,13 +123,17 @@ class RouteRequest {
   factory RouteRequest.fromMap(Map<String, dynamic> map) {
     return RouteRequest(
       arguments: map['arguments'] as dynamic,
-      type: RouteType.values.firstWhere((element) => element.name == map['type']),
+      type: RouteType.values.firstWhere(
+        (element) => element.name == map['type'],
+      ),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory RouteRequest.fromJson(String source) => RouteRequest.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory RouteRequest.fromJson(String source) => RouteRequest.fromMap(
+        json.decode(source) as Map<String, dynamic>,
+      );
 }
 
 enum RouteType { navigate, push, replace }

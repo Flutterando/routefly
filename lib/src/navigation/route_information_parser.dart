@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
@@ -5,7 +7,9 @@ import 'package:routefly/routefly.dart';
 import 'package:routefly/src/entities/route_aggregate.dart';
 import 'package:routefly/src/navigation/url_service/url_service.dart';
 
-typedef RouteMiddleware = FutureOr<RouteInformation> Function(RouteInformation routeInformation);
+typedef RouteMiddleware = FutureOr<RouteInformation> Function(
+  RouteInformation routeInformation,
+);
 
 class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
   final RouteAggregate aggregate;
@@ -16,16 +20,18 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
   RouteflyInformationParser(this.aggregate, this.middlewares);
 
   @override
-  Future<RouteEntity> parseRouteInformation(RouteInformation routeInformation) async {
+  Future<RouteEntity> parseRouteInformation(
+    RouteInformation routeInformation,
+  ) async {
     final urlService = UrlService.create();
 
-    for (var middleware in middlewares) {
+    for (final middleware in middlewares) {
       routeInformation = await middleware(routeInformation);
     }
 
-    final request = routeInformation.state as RouteRequest;
+    final request = routeInformation.state! as RouteRequest;
 
-    String path = routeInformation.uri.path;
+    var path = routeInformation.uri.path;
     if (_firstAccess) {
       path = urlService.getPath() ?? routeInformation.uri.path;
       path = path == '/' ? routeInformation.uri.path : path;

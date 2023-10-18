@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:routefly/src/entities/route_entity.dart';
 
 void main() {
-  routeBuilder(c, s) => MaterialPageRoute(builder: (_) => Container());
+  Route routeBuilder(c, s) => MaterialPageRoute(builder: (_) => Container());
 
   test('return null if path not match', () {
     final route = RouteEntity(uri: Uri.parse('/dashboard'), routeBuilder: routeBuilder, key: '/user/edit');

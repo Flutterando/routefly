@@ -1,7 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first,
 import 'dart:io';
 
 import 'package:ansicolor/ansicolor.dart';
+import 'package:flutter/material.dart';
 import 'package:routefly/src/exceptions/exceptions.dart';
 
 import '../entities/route_representation.dart';
@@ -15,7 +16,7 @@ class GenerateRoutes {
   final Directory appDir;
   final File routeFile;
 
-  GenerateRoutes(this.appDir, this.routeFile);
+  const GenerateRoutes(this.appDir, this.routeFile);
 
   Stream<ConsoleResponse> call() async* {
     if (!appDir.existsSync()) {
@@ -28,14 +29,18 @@ class GenerateRoutes {
 
     final files = appDir
         .listSync(recursive: true) //
-        .where((file) => file.path.endsWith('_page.dart') || file.path.endsWith('_layout.dart'))
+        .where(
+          (file) =>
+              file.path.endsWith('_page.dart') //
+              ||
+              file.path.endsWith('_layout.dart'),
+        )
         .whereType<File>()
         .toList();
 
     if (files.isEmpty) {
       yield ConsoleResponse(
         message: errorMessages.noRoutesCreated,
-        type: ConsoleResponseType.info,
       );
       return;
     }
@@ -72,14 +77,19 @@ List<RouteEntity> get routes => [
 
   List<RouteRepresentation> _addParents(List<RouteRepresentation> entries) {
     final layouts = entries.where((e) => e.isLayout).toList();
-    final entriesOrder = entries.toList()..sort((a, b) => a.path.compareTo(b.path));
+    final entriesOrder = entries.toList()
+      ..sort(
+        (a, b) => a.path.compareTo(b.path),
+      );
 
     layouts.sort((a, b) => a.path.compareTo(b.path));
 
-    for (var layout in layouts) {
+    for (final layout in layouts) {
       for (var i = 0; i < entriesOrder.length; i++) {
         var entry = entriesOrder[i];
-        final isParent = entry.path.startsWith(layout.path) && layout.path != entry.path;
+        final isParent = entry.path //
+                .startsWith(layout.path) &&
+            layout.path != entry.path;
         entry = entry.copyWith(parent: isParent ? layout.path : '');
         entriesOrder[i] = entry;
       }
@@ -100,6 +110,7 @@ $imports
   }
 }
 
+@immutable
 class ConsoleResponse {
   final String message;
   final ConsoleResponseType type;
