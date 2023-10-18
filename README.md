@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
 
 4. Generate routes using the following command:
 ```
-dart pub run routefly
+dart run routefly
 ```
 
 Run this command every time you create a new folder with a page to generate the routes again. You can also use the `--watch` flag to automatically generate routes when adding a new page to a folder.

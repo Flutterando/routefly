@@ -1,9 +1,7 @@
 import 'package:routefly/routefly.dart';
 import 'package:flutter/material.dart';
 
-import 'app/app_page.dart';
-import 'app/users/users_page.dart';
-import 'app/users/[id]/user_page.dart';
+import 'app/app_page.dart' as a0;
 
 final routes = <RouteEntity>[
   RouteEntity(
@@ -12,22 +10,7 @@ final routes = <RouteEntity>[
     uri: Uri.parse('/'),
     routeBuilder: (ctx, settings) => MaterialPageRoute(
       settings: settings,
-      builder: (context) => const AppPage(),
+      builder: (context) => const a0.AppPage(),
     ),
-  ),
-  RouteEntity(
-    key: '/users',
-    parent: '',
-    uri: Uri.parse('/users'),
-    routeBuilder: (ctx, settings) => MaterialPageRoute(
-      settings: settings,
-      builder: (context) => const UsersPage(),
-    ),
-  ),
-  RouteEntity(
-    key: '/users/[id]',
-    parent: '',
-    uri: Uri.parse('/users/[id]'),
-    routeBuilder: routeBuilder,
   ),
 ];

@@ -1,5 +1,5 @@
-import 'package:routefly/routefly.dart';
 import 'package:flutter/material.dart';
+import 'package:routefly/routefly.dart';
 
 import 'app/app_page.dart' as a0;
 import 'app/dashboard/dashboard_layout.dart' as a1;
@@ -45,3 +45,42 @@ final routes = <RouteEntity>[
     routeBuilder: a4.routeBuilder,
   ),
 ];
+
+// Route Path Object
+const routePaths = (
+  initialRoute: '/',
+  dashboard: (
+    initial: '/dashboard',
+    option1: '/dashboard/option1',
+    option2: '/dashboard/option2',
+    option3: '/dashboard/option3',
+  ),
+  users: (
+    inital: '/users',
+    $id: (
+      init: '/users/[id]',
+      edit: '/users/[id]/edit',
+    ),
+  ),
+);
+
+void main(List<String> args) {
+  routePaths.initialRoute;
+  routePaths.users.$id.edit;
+  routePaths.dashboard.initial;
+  routePaths.dashboard.option1;
+
+  routePaths.users.$id.init.query({'id': '1'});
+}
+
+extension StringRoutePathExtends on String {
+  String query(Map<String, String> queries) {
+    var newString = this;
+    for (var key in queries.keys) {
+      final value = queries[key]!;
+      newString = newString.replaceAll('[$key]', value);
+    }
+
+    return newString;
+  }
+}

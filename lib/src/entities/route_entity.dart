@@ -112,7 +112,6 @@ class RouteRequest {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'arguments': arguments,
       'type': type.name,
     };
   }

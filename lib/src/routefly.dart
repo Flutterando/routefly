@@ -102,6 +102,7 @@ abstract class Routefly {
     required List<RouteEntity> routes,
     String notFoundPath = '404',
     List<NavigatorObserver> observers = const [],
+    List<RouteMiddleware> middlewares = const [],
   }) {
     _provider = PlatformRouteInformationProvider(
       initialRouteInformation: RouteInformation(
@@ -114,10 +115,13 @@ abstract class Routefly {
 
     return RouterConfig(
       routerDelegate: _delegate!,
-      routeInformationParser: RouteflyInformationParser(RouteAggregate(
-        routes: routes,
-        notFoundPath: notFoundPath,
-      )),
+      routeInformationParser: RouteflyInformationParser(
+        RouteAggregate(
+          routes: routes,
+          notFoundPath: notFoundPath,
+        ),
+        middlewares,
+      ),
       routeInformationProvider: _provider!,
       backButtonDispatcher: RootBackButtonDispatcher(),
     );
