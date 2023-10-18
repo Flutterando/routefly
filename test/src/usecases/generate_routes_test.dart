@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:routefly/src/entities/route_representation.dart';
 import 'package:routefly/src/usecases/generate_routes.dart';
 
 class FileMock implements File {
@@ -26,6 +27,57 @@ class FileMock implements File {
 void main() {
   final appDir = Directory('./test/mocks/app');
   final routeFile = FileMock();
+  test('Generate routePahtStrings', () {
+    final notExistsDir = Directory('./test2');
+    final usecase = GenerateRoutes(notExistsDir, routeFile);
+    final text = usecase.generateRoutePath([
+      RouteRepresentation(path: '/', file: routeFile, index: 0, builder: ''),
+      RouteRepresentation(path: '/dashboard', file: routeFile, index: 0, builder: ''),
+      RouteRepresentation(
+        path: '/dashboard/option1',
+        file: routeFile,
+        index: 0,
+        builder: '',
+        parent: '/dashboard',
+        isLayout: true,
+      ),
+      RouteRepresentation(
+        path: '/dashboard/option2',
+        file: routeFile,
+        index: 0,
+        builder: '',
+        parent: '/dashboard',
+        isLayout: true,
+      ),
+      RouteRepresentation(
+        path: '/dashboard/option3',
+        file: routeFile,
+        index: 0,
+        builder: '',
+        parent: '/dashboard',
+        isLayout: true,
+      ),
+      RouteRepresentation(path: '/product', file: routeFile, index: 0, builder: ''),
+      RouteRepresentation(path: '/user', file: routeFile, index: 0, builder: ''),
+      RouteRepresentation(path: '/user/[id]', file: routeFile, index: 0, builder: ''),
+    ]);
+
+    expect(text,
+        r'''const routePaths = (
+  path: '/',
+  user: (
+    path: '/user',
+    $id: '/user/[id]',
+  ),
+  product: '/product',
+  dashboard: (
+    path: '/dashboard',
+    option3: '/dashboard/option3',
+    option2: '/dashboard/option2',
+    option1: '/dashboard/option1',
+  ),
+);''');
+  });
 
   test('return message if appDir not exists', () {
     final notExistsDir = Directory('./test2');
@@ -64,7 +116,7 @@ void main() {
           type: ConsoleResponseType.warning,
         ),
         const ConsoleResponse(
-          message: 'Routes Generated!🚀',
+          message: 'Generated! lib/routes.dart 🚀',
           type: ConsoleResponseType.success,
         ),
       ]),
@@ -121,4 +173,14 @@ List<RouteEntity> get routes => [
     uri: Uri.parse('/dashboard/option3'),
     routeBuilder: a4.routeBuilder,
   ),
-];''';
+];
+
+const routePaths = (
+  path: '/',
+  dashboard: (
+    path: '/dashboard',
+    option3: '/dashboard/option3',
+    option2: '/dashboard/option2',
+    option1: '/dashboard/option1',
+  ),
+);''';

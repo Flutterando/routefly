@@ -1,5 +1,6 @@
-## 0.0.5
+## 0.0.7
 
+* Object notation generate (routePaths)
 * Added Middleware
 * Improve Generator
 * Improve documentation

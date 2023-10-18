@@ -156,3 +156,18 @@ extension RouteInformationExtension on RouteInformation {
   /// Route request object
   RouteRequest? get request => state as RouteRequest?;
 }
+
+/// Extension to help handle routePaths.
+extension RoutePathsStringExtension on String {
+  /// Replace dynamic parameters with values.
+  String changes(Map<String, String> queries) {
+    var newPath = this;
+
+    for (final key in queries.keys) {
+      final param = queries[key]!;
+      newPath = newPath.replaceFirst('[$key]', param);
+    }
+
+    return newPath;
+  }
+}

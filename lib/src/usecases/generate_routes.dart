@@ -2,7 +2,6 @@
 import 'dart:io';
 
 import 'package:ansicolor/ansicolor.dart';
-import 'package:flutter/material.dart';
 import 'package:routefly/src/exceptions/exceptions.dart';
 
 import '../entities/route_representation.dart';
@@ -11,6 +10,13 @@ const errorMessages = (
   notFoundDirApp: 'AppDir not exists😢',
   noRoutesCreated: 'No routes created😒',
 );
+
+typedef RecordObject = ({
+  String key,
+  String parent,
+  String path,
+  String? specialKey,
+});
 
 class GenerateRoutes {
   final Directory appDir;
@@ -65,7 +71,9 @@ class GenerateRoutes {
     final routeFileContent = '''${_generateImports(entries)}
 List<RouteEntity> get routes => [
   $routeContent,
-];''';
+];
+
+${generateRoutePath(entries)}''';
 
     routeFile.writeAsStringSync(routeFileContent);
 
@@ -73,6 +81,103 @@ List<RouteEntity> get routes => [
       message: 'Generated! lib/routes.dart 🚀',
       type: ConsoleResponseType.success,
     );
+  }
+
+  String generateRoutePath(List<RouteRepresentation> entries) {
+    final paths = entries.map((e) => e.path).toList();
+
+    paths.sort(
+      (a, b) {
+        return b.length.compareTo(a.length);
+      },
+    );
+
+    final duplicatedTargets = <RecordObject>[];
+
+    for (final path in paths) {
+      if (path == '/') {
+        duplicatedTargets.add(
+          (
+            key: 'path',
+            parent: '',
+            path: '/',
+            specialKey: null,
+          ),
+        );
+        continue;
+      }
+
+      final segments = path.split('/')..removeAt(0);
+
+      for (var i = 0; i < segments.length; i++) {
+        final segment = segments[i];
+        final parentIndex = i - 1;
+        final parent = parentIndex < 0 ? '' : segments[parentIndex];
+        duplicatedTargets.add(
+          (
+            key: segment,
+            parent: parent,
+            path: path,
+            specialKey: segment.startsWith('[') ? '\$${segment.replaceFirst('[', '').replaceFirst(']', '')}' : null,
+          ),
+        );
+      }
+    }
+
+    final recordBuffer = StringBuffer();
+
+    final target = <RecordObject>[];
+
+    for (final i in duplicatedTargets.reversed) {
+      if (target.indexWhere((e) => e.key == i.key) == -1) {
+        target.add(i);
+      }
+    }
+    final resolveds = <RecordObject>[];
+    var space = '  ';
+
+    String getAllParents(RecordObject parent) {
+      final parents = target.where((e) => e.parent == parent.key).toList();
+
+      final name = parent.specialKey ?? parent.key;
+
+      if (parents.isEmpty) {
+        resolveds.add(parent);
+        return "$space$name: '${parent.path}',";
+      }
+
+      final innerBuffer = StringBuffer();
+
+      innerBuffer.write(space);
+      innerBuffer.writeln('$name: (');
+      innerBuffer.write(space);
+      innerBuffer.write(space);
+      innerBuffer.writeln("path: '${parent.path}',");
+      final finalSpace = space;
+      space += space;
+      for (final e in parents) {
+        innerBuffer.writeln(getAllParents(e));
+      }
+      innerBuffer.write(finalSpace);
+      innerBuffer.writeln('),');
+
+      resolveds.add(parent);
+
+      return innerBuffer.toString();
+    }
+
+    recordBuffer.writeln('const routePaths = (');
+    for (final t in target) {
+      if (resolveds.indexWhere((e) => e.key == t.key) == -1) {
+        space = '  ';
+        recordBuffer.writeln(getAllParents(t));
+      }
+    }
+
+    recordBuffer.writeln(');');
+
+    final result = recordBuffer.toString().split('\n').where((e) => e.isNotEmpty).join('\n');
+    return result;
   }
 
   List<RouteRepresentation> _addParents(List<RouteRepresentation> entries) {
@@ -110,7 +215,6 @@ $imports
   }
 }
 
-@immutable
 class ConsoleResponse {
   final String message;
   final ConsoleResponseType type;
@@ -153,6 +257,9 @@ class ConsoleResponse {
 
   @override
   int get hashCode => message.hashCode ^ type.hashCode;
+
+  @override
+  String toString() => 'ConsoleResponse(message: $message, type: $type)';
 }
 
 enum ConsoleResponseType { error, success, info, warning }

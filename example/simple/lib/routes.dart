@@ -41,3 +41,12 @@ List<RouteEntity> get routes => [
     routeBuilder: a3.routeBuilder,
   ),
 ];
+
+const routePaths = (
+  path: '/',
+  users: (
+    path: '/users',
+    $id: '/users/[id]',
+  ),
+  guarded: '/guarded',
+);

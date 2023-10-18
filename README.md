@@ -62,6 +62,30 @@ Routefly provides simple navigation methods:
 `Routefly.pop()`: Removes the top route from the route stack. <br>
 `Routefly.replace('path')`: Replaces the last route in the stack with the requested path. <br>
 
+
+It is also possible to access routes using Record `routesPath` which replaces the strings
+which represent the `path` by an object notation.
+
+```dart
+// String notation
+Routefly.navigate('/dashboard/users');
+
+// Object Notation
+Routefly.navigate(routesPath.dashboard.users);
+```
+
+`Dynamic routes` are also represented by objects, but it is necessary to replace the dynamic parameters;<br>
+Use the `changes()` method to do this;
+
+```dart
+// String notation => /product/[id]
+Routefly.navigate('/product/1');
+
+// Object Notation => /product/[id]
+Routefly.navigate(routesPath.product.changes({'id': '1'}));
+```
+
+
 ## Dynamic Routes
 
 Dynamic Routes allow you to create routes from dynamic data. You can use dynamic segments enclosed in brackets, such as `[id]` or `[slugs]`. For example:
@@ -73,13 +97,6 @@ Use navigation commands to replace the dynamic segment, like `Routefly.push('/us
 Access the dynamic parameter (id) on the page using `Routefly.query['id']`.
 
 You can also access segment parameters using Routefly.query.params, e.g., `Routefly.query.params['search']` for `/product?search=Text`.
-
-## Dynamic Routes
-
-When you don't know the exact segment names ahead of time and want to create routes from dynamic data, you can use Dynamic Segments that are filled in at request time, just put the dynamic segment in the folder name in brackets. Ex: `[id]`, `[slugs]`...
-
-Imagine that you want to access a user for editing that needs an id.
-Create the page using the dynamic segment: `lib/app/users/[id]/user_page.dart`. This will generate the route path `/users/[id]`.
 
 
 ## Custom Transition

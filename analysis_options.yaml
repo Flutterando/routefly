@@ -7,3 +7,4 @@ linter:
     avoid_print: false
     parameter_assignments: false
     leading_newlines_in_multiline_strings: false
+    cascade_invocations: false
