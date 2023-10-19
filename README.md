@@ -62,6 +62,8 @@ Routefly provides simple navigation methods:
 `Routefly.pop()`: Removes the top route from the route stack. <br>
 `Routefly.replace('path')`: Replaces the last route in the stack with the requested path. <br>
 
+**You can use `RELATIVE PATH` also**;
+
 
 It is also possible to access routes using Record `routesPath` which replaces the strings
 which represent the `path` by an object notation.

@@ -29,21 +29,21 @@ class _DashboardLayoutState extends State<DashboardLayout> {
                           title: const Text('Option 1'),
                           selected: path == 'option1',
                           onTap: () {
-                            Routefly.navigate('/dashboard/option1');
+                            Routefly.navigate('./option1');
                           },
                         ),
                         ListTile(
                           title: const Text('Option 2'),
                           selected: path == 'option2',
                           onTap: () {
-                            Routefly.navigate('/dashboard/option2');
+                            Routefly.navigate('./option2');
                           },
                         ),
                         ListTile(
                           title: const Text('Option 3'),
                           selected: path == 'option3',
                           onTap: () {
-                            Routefly.navigate('/dashboard/option3');
+                            Routefly.navigate('./option3');
                           },
                         ),
                       ],

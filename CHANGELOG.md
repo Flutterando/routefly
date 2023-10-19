@@ -1,7 +1,8 @@
-## 0.0.7
+## 0.0.8
 
 * Object notation generate (routePaths)
 * Added Middleware
+* Added Relative route
 * Improve Generator
 * Improve documentation
 

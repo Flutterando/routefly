@@ -1,3 +1,4 @@
+import 'package:example/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
@@ -13,7 +14,7 @@ class AppPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Routefly.navigate('/dashboard');
+            Routefly.navigate(routePaths.dashboard.option1);
           },
           child: const Text('Dashboard'),
         ),

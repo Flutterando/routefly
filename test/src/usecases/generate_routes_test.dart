@@ -41,8 +41,7 @@ void main() {
     ];
     final text = usecase.generateRecords(paths);
 
-    expect(text,
-        r'''const routePaths = (
+    expect(text, r'''const routePaths = (
   path: '/',
   dashboard: (
     path: '/dashboard',
@@ -106,8 +105,7 @@ void main() {
   });
 }
 
-const routeFileContents =
-    '''import 'package:routefly/routefly.dart';
+const routeFileContents = '''import 'package:routefly/routefly.dart';
 import 'package:flutter/material.dart';
 
 import './test/mocks/app/app_page.dart' as a0;
