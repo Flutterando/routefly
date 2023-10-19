@@ -40,6 +40,8 @@ abstract class Routefly {
   static void navigate(String path, {dynamic arguments}) {
     _verifyInitialization();
 
+    path = uri.resolve(path).toString();
+
     _provider!.didPushRouteInformation(
       RouteInformation(
         uri: Uri.parse(path),
@@ -54,6 +56,7 @@ abstract class Routefly {
   /// Replaces the last route in the stack with the requested one
   static void replace(String path, {dynamic arguments}) {
     _verifyInitialization();
+    path = uri.resolve(path).toString();
 
     _provider!.didPushRouteInformation(
       RouteInformation(
@@ -69,6 +72,7 @@ abstract class Routefly {
   /// Add route to stack
   static void push(String path, {dynamic arguments}) {
     _verifyInitialization();
+    path = uri.resolve(path).toString();
 
     _provider!.didPushRouteInformation(
       RouteInformation(

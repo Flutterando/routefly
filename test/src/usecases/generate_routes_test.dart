@@ -60,10 +60,10 @@ void main() {
       RouteRepresentation(path: '/product', file: routeFile, index: 0, builder: ''),
       RouteRepresentation(path: '/user', file: routeFile, index: 0, builder: ''),
       RouteRepresentation(path: '/user/[id]', file: routeFile, index: 0, builder: ''),
+      RouteRepresentation(path: '/user2/[id]', file: routeFile, index: 0, builder: ''),
     ]);
 
-    expect(text,
-        r'''const routePaths = (
+    expect(text, r'''const routePaths = (
   path: '/',
   user: (
     path: '/user',
@@ -76,6 +76,7 @@ void main() {
     option2: '/dashboard/option2',
     option1: '/dashboard/option1',
   ),
+  user2: '/user2/[id]',
 );''');
   });
 
@@ -126,8 +127,7 @@ void main() {
   });
 }
 
-const routeFileContents =
-    '''import 'package:routefly/routefly.dart';
+const routeFileContents = '''import 'package:routefly/routefly.dart';
 import 'package:flutter/material.dart';
 
 import './test/mocks/app/app_page.dart' as a0;
