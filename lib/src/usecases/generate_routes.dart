@@ -65,6 +65,7 @@ class GenerateRoutes {
     }
 
     entries = _addParents(entries);
+    final paths = entries.map((e) => e.path).toList();
 
     final routeContent = entries.map((e) => e.toString()).join(',\n  ');
 
@@ -73,7 +74,7 @@ List<RouteEntity> get routes => [
   $routeContent,
 ];
 
-${generateRoutePath(entries)}''';
+${generateRecords(paths)}''';
 
     routeFile.writeAsStringSync(routeFileContent);
 
@@ -83,101 +84,68 @@ ${generateRoutePath(entries)}''';
     );
   }
 
-  String generateRoutePath(List<RouteRepresentation> entries) {
-    final paths = entries.map((e) => e.path).toList();
+  String generateRecords(List<String> paths) {
+    final mapPaths = _transformToMap(paths);
+    final pathBuffer = StringBuffer();
 
-    paths.sort(
-      (a, b) {
-        return b.length.compareTo(a.length);
-      },
-    );
+    pathBuffer.writeln('const routePaths = (');
+    pathBuffer.writeln(_generateRoutePaths(mapPaths));
+    pathBuffer.writeln(');');
 
-    final duplicatedTargets = <RecordObject>[];
+    return pathBuffer.toString();
+  }
+
+  String _generateRoutePaths(Map<String, dynamic> jsonMap, [String prefix = '', int depth = 1]) {
+    final output = <String>[];
+
+    // Adicionando a chave path sempre que houver sub-rotas
+    if (jsonMap.isNotEmpty && !jsonMap.containsKey('path')) {
+      output.add(
+        "${_indentation(depth)}path: '${prefix.isEmpty ? '/' : prefix}',",
+      );
+    }
+
+    jsonMap.forEach((key, value) {
+      final newKey = key == 'path' ? 'path' : key.replaceAll('[', r'$').replaceAll(']', '');
+      if (value.isEmpty) {
+        output.add("${_indentation(depth)}$newKey: '$prefix/$key',");
+      } else {
+        final nested = _generateRoutePaths(value, '$prefix/$key', depth + 1);
+        output.add('${_indentation(depth)}$newKey: (\n$nested\n${_indentation(depth)}),');
+      }
+    });
+
+    return output.join('\n');
+  }
+
+  String _indentation(int depth) {
+    return '  ' * depth;
+  }
+
+  Map<String, dynamic> _transformToMap(List<String> paths) {
+    final resultMap = <String, dynamic>{};
 
     for (final path in paths) {
-      if (path == '/') {
-        duplicatedTargets.add(
-          (
-            key: 'path',
-            parent: '',
-            path: '/',
-            specialKey: null,
-          ),
-        );
-        continue;
-      }
+      final segments = path.split('/').where((segment) => segment.isNotEmpty).toList();
 
-      final segments = path.split('/')..removeAt(0);
-
+      var currentMap = resultMap;
       for (var i = 0; i < segments.length; i++) {
         final segment = segments[i];
-        final parentIndex = i - 1;
-        final parent = parentIndex < 0 ? '' : segments[parentIndex];
-        duplicatedTargets.add(
-          (
-            key: segment,
-            parent: parent,
-            path: path,
-            specialKey: segment.startsWith('[') ? '\$${segment.replaceFirst('[', '').replaceFirst(']', '')}' : null,
-          ),
-        );
+
+        if (currentMap[segment] == null) {
+          if (i == segments.length - 1) {
+            currentMap[segment] = <String, dynamic>{};
+          } else {
+            currentMap[segment] = <String, dynamic>{};
+            currentMap = currentMap[segment]!;
+          }
+        } else {
+          currentMap = currentMap[segment];
+        }
       }
     }
 
-    final recordBuffer = StringBuffer();
-
-    final target = <RecordObject>[];
-
-    for (final i in duplicatedTargets.reversed) {
-      if (target.indexWhere((e) => e.key == i.key) == -1) {
-        target.add(i);
-      }
-    }
-    final resolveds = <RecordObject>[];
-    var space = '  ';
-
-    String getAllParents(RecordObject parent) {
-      final parents = target.where((e) => e.parent == parent.key).toList();
-
-      final name = parent.specialKey ?? parent.key;
-
-      if (parents.isEmpty) {
-        resolveds.add(parent);
-        return "$space$name: '${parent.path}',";
-      }
-
-      final innerBuffer = StringBuffer();
-
-      innerBuffer.write(space);
-      innerBuffer.writeln('$name: (');
-      innerBuffer.write(space);
-      innerBuffer.write(space);
-      innerBuffer.writeln("path: '${parent.path}',");
-      final finalSpace = space;
-      space += space;
-      for (final e in parents) {
-        innerBuffer.writeln(getAllParents(e));
-      }
-      innerBuffer.write(finalSpace);
-      innerBuffer.writeln('),');
-
-      resolveds.add(parent);
-
-      return innerBuffer.toString();
-    }
-
-    recordBuffer.writeln('const routePaths = (');
-    for (final t in target) {
-      if (resolveds.indexWhere((e) => e.key == t.key) == -1) {
-        space = '  ';
-        recordBuffer.writeln(getAllParents(t));
-      }
-    }
-
-    recordBuffer.writeln(');');
-
-    final result = recordBuffer.toString().split('\n').where((e) => e.isNotEmpty).join('\n');
-    return result;
+    return resultMap;
   }
 
   List<RouteRepresentation> _addParents(List<RouteRepresentation> entries) {

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:routefly/src/entities/route_representation.dart';
 import 'package:routefly/src/usecases/generate_routes.dart';
 
 class FileMock implements File {
@@ -30,53 +29,34 @@ void main() {
   test('Generate routePahtStrings', () {
     final notExistsDir = Directory('./test2');
     final usecase = GenerateRoutes(notExistsDir, routeFile);
-    final text = usecase.generateRoutePath([
-      RouteRepresentation(path: '/', file: routeFile, index: 0, builder: ''),
-      RouteRepresentation(path: '/dashboard', file: routeFile, index: 0, builder: ''),
-      RouteRepresentation(
-        path: '/dashboard/option1',
-        file: routeFile,
-        index: 0,
-        builder: '',
-        parent: '/dashboard',
-        isLayout: true,
-      ),
-      RouteRepresentation(
-        path: '/dashboard/option2',
-        file: routeFile,
-        index: 0,
-        builder: '',
-        parent: '/dashboard',
-        isLayout: true,
-      ),
-      RouteRepresentation(
-        path: '/dashboard/option3',
-        file: routeFile,
-        index: 0,
-        builder: '',
-        parent: '/dashboard',
-        isLayout: true,
-      ),
-      RouteRepresentation(path: '/product', file: routeFile, index: 0, builder: ''),
-      RouteRepresentation(path: '/user', file: routeFile, index: 0, builder: ''),
-      RouteRepresentation(path: '/user/[id]', file: routeFile, index: 0, builder: ''),
-    ]);
+    final paths = <String>[
+      '/',
+      '/dashboard',
+      '/product',
+      '/user',
+      '/user/[id]',
+      '/dashboard/option1',
+      '/dashboard/option2',
+      '/dashboard/option3',
+    ];
+    final text = usecase.generateRecords(paths);
 
     expect(text,
         r'''const routePaths = (
   path: '/',
+  dashboard: (
+    path: '/dashboard',
+    option1: '/dashboard/option1',
+    option2: '/dashboard/option2',
+    option3: '/dashboard/option3',
+  ),
+  product: '/product',
   user: (
     path: '/user',
     $id: '/user/[id]',
   ),
-  product: '/product',
-  dashboard: (
-    path: '/dashboard',
-    option3: '/dashboard/option3',
-    option2: '/dashboard/option2',
-    option1: '/dashboard/option1',
-  ),
-);''');
+);
+''');
   });
 
   test('return message if appDir not exists', () {
@@ -179,8 +159,9 @@ const routePaths = (
   path: '/',
   dashboard: (
     path: '/dashboard',
-    option3: '/dashboard/option3',
-    option2: '/dashboard/option2',
     option1: '/dashboard/option1',
+    option2: '/dashboard/option2',
+    option3: '/dashboard/option3',
   ),
-);''';
+);
+''';
