@@ -41,22 +41,14 @@ class RouteAggregate {
     return a.uri.pathSegments.length.compareTo(b.uri.pathSegments.length);
   }
 
-  RouteEntity findRoute(String path) {
-    var findedRoute = _findRoute(path);
-
+  RouteEntity findRoute(Uri uri) {
+    final findedRoute = _findRoute(uri);
     if (findedRoute != null && findedRoute.parent.isNotEmpty) {
-      final parent = _findRoute(findedRoute.parent);
+      final parent = _findRoute(Uri.parse(findedRoute.parent));
       if (parent != null) {
         return findedRoute.copyWith(parentEntity: parent);
       }
     } else if (findedRoute != null) {
-      return findedRoute;
-    }
-
-    // not found page
-    findedRoute = _findRoute(notFoundPath);
-
-    if (findedRoute != null) {
       return findedRoute;
     }
 
@@ -67,7 +59,7 @@ class RouteAggregate {
           pageBuilder: (context, a1, a2) {
             return Material(
               color: Colors.black,
-              child: Center(child: Text('Not found page: \$($path)')),
+              child: Center(child: Text('Not found page: \$($uri)')),
             );
           },
         );
@@ -76,9 +68,9 @@ class RouteAggregate {
     );
   }
 
-  RouteEntity? _findRoute(String path) {
+  RouteEntity? _findRoute(Uri uri) {
     for (final route in routes) {
-      final candidate = route.addNewInfo(path);
+      final candidate = route.addNewInfo(uri);
       if (candidate != null) {
         return candidate;
       }

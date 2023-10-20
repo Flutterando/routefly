@@ -58,9 +58,8 @@ class RouteEntity {
     );
   }
 
-  RouteEntity? addNewInfo(String path) {
+  RouteEntity? addNewInfo(Uri uriCandidate) {
     final params = <String, dynamic>{};
-    final uriCandidate = Uri.parse(path);
 
     if (uri.pathSegments.length != uriCandidate.pathSegments.length) {
       return null;

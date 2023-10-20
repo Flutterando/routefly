@@ -149,8 +149,49 @@ abstract class Routefly {
 /// Extension of RouteInformation
 extension RouteInformationExtension on RouteInformation {
   /// Prototype pattern for RouteInformation.<br>
-  /// Use to transform uri and request.
-  RouteInformation redirect(Uri newUri, {RouteRequest? request}) {
+  /// Use to transform uri.
+  RouteInformation redirect(Uri newUri) {
+    return RouteInformation(
+      uri: newUri,
+      state: request ?? state,
+    );
+  }
+
+  /// Get query and parameters by path
+  RouteflyQuery? query(String path) {
+    final data = <String, dynamic>{};
+    final uriCandidate = Uri.parse(path);
+
+    if (uri.pathSegments.length != uriCandidate.pathSegments.length) {
+      return null;
+    }
+
+    for (var i = 0; i < uriCandidate.pathSegments.length; i++) {
+      final segmentCandidate = uriCandidate.pathSegments[i];
+      final segment = uri.pathSegments[i];
+
+      if (segmentCandidate.contains('[')) {
+        final key = segmentCandidate.replaceFirst('[', '').replaceFirst(']', '');
+        final value = num.tryParse(segment) ?? segment;
+        data[key] = value;
+        continue;
+      }
+
+      if (segment != segmentCandidate) {
+        return null;
+      }
+    }
+
+    return RouteflyQuery(
+      uri.queryParameters,
+      data,
+      request?.arguments,
+    );
+  }
+
+  /// Prototype pattern for RouteInformation.<br>
+  /// Use to transform uri.
+  RouteInformation rewrite(Uri newUri) {
     return RouteInformation(
       uri: newUri,
       state: request ?? state,

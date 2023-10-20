@@ -45,9 +45,9 @@ void main() {
       notFoundPath: '/404',
     );
 
-    expect(aggregate.findRoute('/product'), isNotNull);
-    expect(aggregate.findRoute('/product/edit/test'), isNotNull);
-    expect(aggregate.findRoute('/product/2'), isNotNull);
+    expect(aggregate.findRoute(Uri.parse('/product')), isNotNull);
+    expect(aggregate.findRoute(Uri.parse('/product/edit/test')), isNotNull);
+    expect(aggregate.findRoute(Uri.parse('/product/2')), isNotNull);
   });
 
   test('find Routes with parent', () {
@@ -61,7 +61,7 @@ void main() {
       notFoundPath: '/404',
     );
 
-    final route = aggregate.findRoute('/dashboard/option1');
+    final route = aggregate.findRoute(Uri.parse('/dashboard/option1'));
 
     expect(route.parentEntity, parent);
   });

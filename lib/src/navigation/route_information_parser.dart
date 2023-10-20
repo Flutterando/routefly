@@ -25,21 +25,25 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
   ) async {
     final urlService = UrlService.create();
 
-    for (final middleware in middlewares) {
-      routeInformation = await middleware(routeInformation);
+    if (_firstAccess) {
+      var uri = routeInformation.uri;
+      final nativePath = urlService.getPath();
+      uri = nativePath != null ? Uri.parse(nativePath) : uri;
+      _firstAccess = false;
+      routeInformation = RouteInformation(
+        uri: uri,
+        state: routeInformation.state,
+      );
     }
 
     final request = routeInformation.state! as RouteRequest;
 
-    var path = routeInformation.uri.path;
-    if (_firstAccess) {
-      path = urlService.getPath() ?? routeInformation.uri.path;
-      path = path == '/' ? routeInformation.uri.path : path;
-      _firstAccess = false;
+    for (final middleware in middlewares) {
+      routeInformation = await middleware(routeInformation);
     }
 
     return aggregate
-        .findRoute(path) //
+        .findRoute(routeInformation.uri) //
         .copyWith(
           type: request.type,
           arguments: request.arguments,
