@@ -62,6 +62,7 @@ class RouteAggregate {
       uri: Uri.parse('/404'),
       routeBuilder: (context, settings) {
         return PageRouteBuilder(
+          settings: settings,
           pageBuilder: (context, a1, a2) {
             return Material(
               color: Colors.black,
