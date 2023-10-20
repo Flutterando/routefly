@@ -42,13 +42,19 @@ class RouteAggregate {
   }
 
   RouteEntity findRoute(Uri uri) {
-    final findedRoute = _findRoute(uri);
+    var findedRoute = _findRoute(uri);
     if (findedRoute != null && findedRoute.parent.isNotEmpty) {
       final parent = _findRoute(Uri.parse(findedRoute.parent));
       if (parent != null) {
         return findedRoute.copyWith(parentEntity: parent);
       }
     } else if (findedRoute != null) {
+      return findedRoute;
+    }
+
+    findedRoute = _findRoute(Uri.parse(notFoundPath));
+
+    if (findedRoute != null) {
       return findedRoute;
     }
 

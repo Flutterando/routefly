@@ -1,4 +1,4 @@
-## 0.0.9
+## 0.0.10
 
 * Object notation generate (routePaths)
 * Added Middleware
