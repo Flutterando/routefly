@@ -172,13 +172,13 @@ ${generateRecords(paths)}''';
   }
 
   String _generateImports(List<RouteRepresentation> entries) {
-    final imports = entries //
-        .map((e) => e.import)
-        .join('\n');
-    return '''import 'package:routefly/routefly.dart';
-import 'package:flutter/material.dart';
+    final imports = entries.map((e) => e.import).toList();
+    imports.sort((a, b) => a.compareTo(b));
+    final importsText = imports.join('\n');
+    return '''import 'package:flutter/material.dart';
+import 'package:routefly/routefly.dart';
 
-$imports
+$importsText
 ''';
   }
 }

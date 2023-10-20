@@ -41,11 +41,11 @@ class RouteAggregate {
     return a.uri.pathSegments.length.compareTo(b.uri.pathSegments.length);
   }
 
-  RouteEntity findRoute(String path) {
-    final findedRoute = _findRoute(path);
+  RouteEntity findRoute(Uri uri) {
+    final findedRoute = _findRoute(uri);
 
     if (findedRoute != null && findedRoute.parent.isNotEmpty) {
-      final parent = _findRoute(findedRoute.parent);
+      final parent = _findRoute(Uri.parse(findedRoute.parent));
       if (parent != null) {
         return findedRoute.copyWith(parentEntity: parent);
       }
@@ -53,12 +53,12 @@ class RouteAggregate {
       return findedRoute;
     }
 
-    throw RouteflyException('Route ($path) not found');
+    throw RouteflyException('Route ($uri) not found');
   }
 
-  RouteEntity? _findRoute(String path) {
+  RouteEntity? _findRoute(Uri uri) {
     for (final route in routes) {
-      final candidate = route.addNewInfo(path);
+      final candidate = route.addNewInfo(uri);
       if (candidate != null) {
         return candidate;
       }

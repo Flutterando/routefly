@@ -103,12 +103,14 @@ class RouteRepresentation {
 
   @override
   String toString() {
-    return '''RouteEntity(
-    key: '$path',
-    parent: '$parent',
-    uri: Uri.parse('$path'),
-    routeBuilder: $builder,
-  )''';
+    return [
+      'RouteEntity(',
+      "    key: '$path',",
+      if (parent.isNotEmpty) "    parent: '$parent',",
+      "    uri: Uri.parse('$path'),",
+      '    routeBuilder: $builder,',
+      '  )',
+    ].join('\n');
   }
 
   RouteRepresentation copyWith({
