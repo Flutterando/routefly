@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:flutter/material.dart';
 import 'package:routefly/src/entities/route_entity.dart';
-import 'package:routefly/src/exceptions/exceptions.dart';
 
 class RouteAggregate {
   late final List<RouteEntity> routes;
@@ -42,7 +42,7 @@ class RouteAggregate {
   }
 
   RouteEntity findRoute(String path) {
-    final findedRoute = _findRoute(path);
+    var findedRoute = _findRoute(path);
 
     if (findedRoute != null && findedRoute.parent.isNotEmpty) {
       final parent = _findRoute(findedRoute.parent);
@@ -53,7 +53,27 @@ class RouteAggregate {
       return findedRoute;
     }
 
-    throw RouteflyException('Route ($path) not found');
+    // not found page
+    findedRoute = _findRoute(notFoundPath);
+
+    if (findedRoute != null) {
+      return findedRoute;
+    }
+
+    return RouteEntity(
+      uri: Uri.parse('/404'),
+      routeBuilder: (context, settings) {
+        return PageRouteBuilder(
+          pageBuilder: (context, a1, a2) {
+            return Material(
+              color: Colors.black,
+              child: Center(child: Text('Not found page: \$($path)')),
+            );
+          },
+        );
+      },
+      key: '/404',
+    );
   }
 
   RouteEntity? _findRoute(String path) {
