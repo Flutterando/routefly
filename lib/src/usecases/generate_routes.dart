@@ -193,8 +193,7 @@ ${generateRecords(paths)}''';
     final imports = entries.map((e) => e.import).toList();
     imports.sort((a, b) => a.compareTo(b));
     final importsText = imports.join('\n');
-    return '''import 'package:flutter/material.dart';
-import 'package:routefly/routefly.dart';
+    return '''import 'package:routefly/routefly.dart';
 
 $importsText
 ''';
