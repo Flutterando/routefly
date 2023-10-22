@@ -118,6 +118,25 @@ Route routeBuilder(BuildContext context, RouteSettings settings) {
 }
 ```
 
+It is also possible to change the global transition of the routes:
+
+```dart
+@override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: Routefly.routerConfig(
+        routes: routes,
+        routeBuilder: (context, settings, child) {
+          return MaterialPageRoute(
+            settings: settings, // !! IMPORTANT !!
+            builder: (context) => child,
+          );
+        },
+      ),
+    );
+  }
+```
+
 
 ## Layout (RouterOutlet)
 

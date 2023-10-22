@@ -14,6 +14,12 @@ class AppWidget extends StatelessWidget {
       routerConfig: Routefly.routerConfig(
         routes: routes,
         middlewares: [_guardRoute],
+        routeBuilder: (context, settings, child) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => child,
+          );
+        },
       ),
     );
   }

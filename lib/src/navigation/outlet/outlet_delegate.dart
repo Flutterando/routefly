@@ -5,13 +5,18 @@ part of '../../routefly.dart';
 class OutletRouterDelegate extends RouterDelegate<RouteEntity> //
     with
         ChangeNotifier {
+  final String? parentPath;
+
+  OutletRouterDelegate(this.parentPath);
+
   @override
   Widget build(BuildContext context) {
     final state = Routefly.of(context);
     final entity = state.route;
+    final parent = parentPath ?? entity.parent;
 
     final configurations = Routefly._delegate!.configurations.where(
-      (e) => e.parent == entity.key,
+      (e) => e.parent == parent,
     );
     if (configurations.isEmpty) {
       return Container();

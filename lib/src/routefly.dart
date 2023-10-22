@@ -11,32 +11,45 @@ import 'navigation/route_information_parser.dart';
 part 'navigation/outlet/outlet_delegate.dart';
 part 'navigation/outlet/router_outlet.dart';
 
-/// Routefly is a folder-based route manager inspired
-/// by NextJS and created by the Flutterando community.
-/// It allows you to automatically create routes in
-/// your Flutter app by simply organizing your code
-/// files within specific directories. When a file is added to the
-/// "pages" directory, it's automatically available as a route.
-/// Just add the appropriate folder structure inside
-/// the "lib/app" folder.
+/// Typedef for a function that builds a [Route] based on the provided context
+typedef RouteBuilderWithChild = Route Function(
+  BuildContext context,
+  RouteSettings settings,
+  Widget child,
+);
+
+/// [Routefly] provides a folder-based route management inspired by NextJS.
+/// It's a solution created by the Flutterando community for Flutter
+/// applications.
+///
+/// By organizing your code files within specific directories, Routefly
+/// allows automatic route creation. When a file is added to the "pages"
+/// directory,
+/// it becomes instantly accessible as a route. For optimal results, ensure you
+/// structure
+/// your folders appropriately inside the "lib/app" directory.
 abstract class Routefly {
   static PlatformRouteInformationProvider? _provider;
   static RouteflyRouterDelegate? _delegate;
 
-  /// Listen for route changes
+  /// The default route builder used by [Routefly].
+  static late RouteBuilderWithChild defaultRouteBuilder;
+
+  /// Provides a [Listenable] object to listen to route changes.
   static Listenable get listenable {
     _verifyInitialization();
     return _delegate!;
   }
 
-  /// Listen for route changes by InheritedWidget
+  /// Accesses the current route state using [InheritedWidget]
+  /// in the given [context].
   static RouteflyState of(BuildContext context) {
     final page = ModalRoute.of(context)!.settings as RouteflyPage;
     context.dependOnInheritedWidgetOfExactType<InheritedRoutefly>();
     return RouteflyState(page);
   }
 
-  /// Replaces the entire route stack with the requested one
+  /// Replaces the entire route stack with the given route.
   static void navigate(String path, {dynamic arguments}) {
     _verifyInitialization();
 
@@ -53,7 +66,7 @@ abstract class Routefly {
     );
   }
 
-  /// Replaces the last route in the stack with the requested one
+  /// Replaces only the last route in the stack with the provided route.
   static void replace(String path, {dynamic arguments}) {
     _verifyInitialization();
     final uri = currentUri.resolve(path);
@@ -69,7 +82,7 @@ abstract class Routefly {
     );
   }
 
-  /// Add route to stack
+  /// Adds a new route on top of the existing stack.
   static void push(String path, {dynamic arguments}) {
     _verifyInitialization();
     final uri = currentUri.resolve(path);
@@ -85,7 +98,7 @@ abstract class Routefly {
     );
   }
 
-  /// Remove route to stack
+  /// Removes the last route from the stack.
   static void pop() {
     _verifyInitialization();
 
@@ -114,22 +127,36 @@ abstract class Routefly {
     }
   }
 
-  /// Navigator 2.0 configurations
+  static Route _defaultRouteBuilder(
+    BuildContext context,
+    RouteSettings settings,
+    Widget child,
+  ) {
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (context) => child,
+    );
+  }
+
+  /// Initializes and returns configurations for Navigator 2.0.
   static RouterConfig<Object>? routerConfig({
     String initialPath = '',
     required List<RouteEntity> routes,
     String notFoundPath = '404',
+    RouteBuilderWithChild? routeBuilder,
     List<NavigatorObserver> observers = const [],
     List<RouteMiddleware> middlewares = const [],
   }) {
-    _provider = PlatformRouteInformationProvider(
+    defaultRouteBuilder = routeBuilder ?? _defaultRouteBuilder;
+
+    _provider ??= PlatformRouteInformationProvider(
       initialRouteInformation: RouteInformation(
         uri: Uri.parse(initialPath),
         state: RouteRequest(arguments: null, type: RouteType.navigate),
       ),
     );
 
-    _delegate = RouteflyRouterDelegate(observers);
+    _delegate ??= RouteflyRouterDelegate(observers);
 
     return RouterConfig(
       routerDelegate: _delegate!,
@@ -146,10 +173,11 @@ abstract class Routefly {
   }
 }
 
-/// Extension of RouteInformation
+/// An extension on `RouteInformation` that provides helper methods
+/// for routing operations, such as redirecting, rewriting,
+/// and extracting queries.
 extension RouteInformationExtension on RouteInformation {
-  /// Prototype pattern for RouteInformation.<br>
-  /// Use to transform uri.
+  /// Redirects the current URI to a new URI.
   RouteInformation redirect(Uri newUri) {
     return RouteInformation(
       uri: newUri,
@@ -157,7 +185,7 @@ extension RouteInformationExtension on RouteInformation {
     );
   }
 
-  /// Get query and parameters by path
+  /// Retrieves query and parameters for a given path.
   RouteflyQuery? query(String path) {
     final data = <String, dynamic>{};
     final uriCandidate = Uri.parse(path);
@@ -171,7 +199,9 @@ extension RouteInformationExtension on RouteInformation {
       final segment = uri.pathSegments[i];
 
       if (segmentCandidate.contains('[')) {
-        final key = segmentCandidate.replaceFirst('[', '').replaceFirst(']', '');
+        final key = segmentCandidate //
+            .replaceFirst('[', '')
+            .replaceFirst(']', '');
         final value = num.tryParse(segment) ?? segment;
         data[key] = value;
         continue;
@@ -189,8 +219,7 @@ extension RouteInformationExtension on RouteInformation {
     );
   }
 
-  /// Prototype pattern for RouteInformation.<br>
-  /// Use to transform uri.
+  /// Rewrites the current URI with a new URI.
   RouteInformation rewrite(Uri newUri) {
     return RouteInformation(
       uri: newUri,
@@ -198,13 +227,13 @@ extension RouteInformationExtension on RouteInformation {
     );
   }
 
-  /// Route request object
+  /// Retrieves the route request object.
   RouteRequest? get request => state as RouteRequest?;
 }
 
-/// Extension to help handle routePaths.
+/// An extension on `String` to simplify the handling of route paths.
 extension RoutePathsStringExtension on String {
-  /// Replace dynamic parameters with values.
+  /// Dynamically replaces path parameters with their corresponding values.
   String changes(Map<String, String> queries) {
     var newPath = this;
 

@@ -1,29 +1,36 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first,
+/// Route generation utility for Routefly package.
+///
+/// This script automates the process of generating routes for
+/// a Flutter application using the Routefly package.
+
 import 'dart:io';
 
 import 'package:ansicolor/ansicolor.dart';
+import 'package:meta/meta.dart';
 import 'package:routefly/src/exceptions/exceptions.dart';
 
 import '../entities/route_representation.dart';
 
+/// Constants for error messages visible for testing.
+@visibleForTesting
 const errorMessages = (
   notFoundDirApp: 'AppDir not exists😢',
   noRoutesCreated: 'No routes created😒',
 );
 
-typedef RecordObject = ({
-  String key,
-  String parent,
-  String path,
-  String? specialKey,
-});
-
+/// Class to generate routes.
+@immutable
 class GenerateRoutes {
+  /// Directory default is lib/app
   final Directory appDir;
+
+  /// route.dart file default is lib/routes.dart
   final File routeFile;
 
+  /// Constructs a [GenerateRoutes] instance.
   const GenerateRoutes(this.appDir, this.routeFile);
 
+  /// Generates routes based on the given app directory and route file.
   Stream<ConsoleResponse> call() async* {
     if (!appDir.existsSync()) {
       yield ConsoleResponse(
@@ -84,6 +91,8 @@ ${generateRecords(paths)}''';
     );
   }
 
+  /// Generates records for the given paths.
+  @visibleForTesting
   String generateRecords(List<String> paths) {
     final mapPaths = _transformToMap(paths);
     final pathBuffer = StringBuffer();
@@ -95,10 +104,13 @@ ${generateRecords(paths)}''';
     return pathBuffer.toString();
   }
 
-  String _generateRoutePaths(Map<String, dynamic> jsonMap, [String prefix = '', int depth = 1]) {
+  String _generateRoutePaths(
+    Map<String, dynamic> jsonMap, [
+    String prefix = '',
+    int depth = 1,
+  ]) {
     final output = <String>[];
 
-    // Adicionando a chave path sempre que houver sub-rotas
     if (jsonMap.isNotEmpty && !jsonMap.containsKey('path')) {
       output.add(
         "${_indentation(depth)}path: '${prefix.isEmpty ? '/' : prefix}',",
@@ -106,12 +118,18 @@ ${generateRecords(paths)}''';
     }
 
     jsonMap.forEach((key, value) {
-      final newKey = key == 'path' ? 'path' : key.replaceAll('[', r'$').replaceAll(']', '');
+      final newKey = key == 'path'
+          ? 'path'
+          : key //
+              .replaceAll('[', r'$')
+              .replaceAll(']', '');
       if (value.isEmpty) {
         output.add("${_indentation(depth)}$newKey: '$prefix/$key',");
       } else {
         final nested = _generateRoutePaths(value, '$prefix/$key', depth + 1);
-        output.add('${_indentation(depth)}$newKey: (\n$nested\n${_indentation(depth)}),');
+        output.add(
+          '${_indentation(depth)}$newKey: (\n$nested\n${_indentation(depth)}),',
+        );
       }
     });
 
@@ -183,15 +201,22 @@ $importsText
   }
 }
 
+/// Class to represent console response.
+@immutable
 class ConsoleResponse {
+  /// Message to be displayed.
   final String message;
+
+  /// Type of the message.
   final ConsoleResponseType type;
 
+  /// Constructs a [ConsoleResponse] instance.
   const ConsoleResponse({
     required this.message,
     this.type = ConsoleResponseType.info,
   });
 
+  /// Logs the console response.
   void log() {
     AnsiPen? pen;
 
@@ -230,4 +255,18 @@ class ConsoleResponse {
   String toString() => 'ConsoleResponse(message: $message, type: $type)';
 }
 
-enum ConsoleResponseType { error, success, info, warning }
+/// Enum for types of console responses.
+/// Used to color the console output.
+enum ConsoleResponseType {
+  /// Error type.
+  error,
+
+  /// Success type.
+  success,
+
+  /// Info type.
+  info,
+
+  /// Warning type.
+  warning,
+}

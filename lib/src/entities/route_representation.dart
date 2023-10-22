@@ -90,9 +90,10 @@ class RouteRepresentation {
       return 'a$index.routeBuilder';
     }
 
-    return '''(ctx, settings) => MaterialPageRoute(
-      settings: settings,
-      builder: (context) => const a$index.$className(),
+    return '''(ctx, settings) => Routefly.defaultRouteBuilder(
+      ctx,
+      settings,
+      const a$index.$className(),
     )''';
   }
 

@@ -16,6 +16,12 @@
             "request": "launch",
             "type": "dart"
         },
+        {
+            "name": "iOS Routes",
+            "cwd": "example/ios_route",
+            "request": "launch",
+            "type": "dart"
+        },
         
     ]
 }

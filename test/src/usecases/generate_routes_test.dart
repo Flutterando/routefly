@@ -118,17 +118,19 @@ List<RouteEntity> get routes => [
   RouteEntity(
     key: '/',
     uri: Uri.parse('/'),
-    routeBuilder: (ctx, settings) => MaterialPageRoute(
-      settings: settings,
-      builder: (context) => const a5.AppPage(),
+    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+      ctx,
+      settings,
+      const a5.AppPage(),
     ),
   ),
   RouteEntity(
     key: '/dashboard',
     uri: Uri.parse('/dashboard'),
-    routeBuilder: (ctx, settings) => MaterialPageRoute(
-      settings: settings,
-      builder: (context) => const a2.DashboardLayout(),
+    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+      ctx,
+      settings,
+      const a2.DashboardLayout(),
     ),
   ),
   RouteEntity(
