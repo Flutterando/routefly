@@ -22,9 +22,9 @@ class _DashboardLayoutState extends State<DashboardLayout> {
               child: ListenableBuilder(
                 listenable: Routefly.listenable,
                 builder: (context, snapshot) {
-                  final path = Routefly.uri.pathSegments.isEmpty //
+                  final path = Routefly.currentUri.pathSegments.isEmpty //
                       ? ''
-                      : Routefly.uri.pathSegments.last;
+                      : Routefly.currentUri.pathSegments.last;
                   return ListView(
                     children: [
                       ListTile(

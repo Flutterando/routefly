@@ -40,11 +40,11 @@ abstract class Routefly {
   static void navigate(String path, {dynamic arguments}) {
     _verifyInitialization();
 
-    path = uri.resolve(path).toString();
+    final uri = currentUri.resolve(path);
 
     _provider!.didPushRouteInformation(
       RouteInformation(
-        uri: Uri.parse(path),
+        uri: uri,
         state: RouteRequest(
           arguments: arguments,
           type: RouteType.navigate,
@@ -56,11 +56,11 @@ abstract class Routefly {
   /// Replaces the last route in the stack with the requested one
   static void replace(String path, {dynamic arguments}) {
     _verifyInitialization();
-    path = uri.resolve(path).toString();
+    final uri = currentUri.resolve(path);
 
     _provider!.didPushRouteInformation(
       RouteInformation(
-        uri: Uri.parse(path),
+        uri: uri,
         state: RouteRequest(
           arguments: arguments,
           type: RouteType.replace,
@@ -72,11 +72,11 @@ abstract class Routefly {
   /// Add route to stack
   static void push(String path, {dynamic arguments}) {
     _verifyInitialization();
-    path = uri.resolve(path).toString();
+    final uri = currentUri.resolve(path);
 
     _provider!.didPushRouteInformation(
       RouteInformation(
-        uri: Uri.parse(path),
+        uri: uri,
         state: RouteRequest(
           arguments: arguments,
           type: RouteType.push,
@@ -98,11 +98,11 @@ abstract class Routefly {
   }
 
   /// Route path uri
-  static Uri get uri => _delegate!.currentConfiguration!.uri;
+  static Uri get currentUri => _delegate!.currentConfiguration!.uri;
 
   /// Route Parameters
   static RouteflyQuery get query => RouteflyQuery(
-        uri.queryParameters,
+        currentUri.queryParameters,
         _route.params,
         _route.arguments,
       );
