@@ -10,6 +10,8 @@ Routefly is a folder-based route manager inspired by NextJS and created by the F
 - `/lib/app/users/users_page.dart` => `/users`
 - `/lib/app/users/[id]/user_page.dart` => `/users/2`
 
+![Logo](https://github.com/Flutterando/routefly/blob/main/assets/images/nested_navigation.gif?raw=true)
+
 ## Installation and Initialization
 
 To get started with Routefly, follow these steps:

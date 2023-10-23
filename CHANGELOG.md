@@ -1,4 +1,4 @@
-## 1.0.0
+## 1.0.1
 
 * Added Group Routes
 * Object notation generate (routePaths)

@@ -89,7 +89,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
       final acrossRoutes = _across(routes);
       configurations.addAll(
         acrossRoutes.where((element) {
-          return configurations.contains(element);
+          return !configurations.contains(element);
         }),
       );
       currentConfiguration = configuration;
