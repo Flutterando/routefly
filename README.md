@@ -1,5 +1,7 @@
 # Routefly
 
+![Logo](https://github.com/Flutterando/routefly/blob/main/assets/images/logo_with_text.png?raw=true)
+
 Routefly is a folder-based route manager inspired by NextJS and created by the Flutterando community. It allows you to automatically create routes in your Flutter app by simply organizing your code files within specific directories. When a file is added to the "pages" directory, it's automatically available as a route. Just add the appropriate folder structure inside the "lib/app" folder.
 
 **Example:**
