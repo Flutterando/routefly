@@ -61,14 +61,16 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
 
     final request = routeInformation.state as RouteRequest?;
 
+    final candidate = aggregate.findRoute(routeInformation.uri);
+
+    final parent = request?.rootNavigator ?? false ? '' : candidate.parent;
+
     // Use the aggregate to determine the right route and return it.
-    return aggregate
-        .findRoute(routeInformation.uri) //
-        .copyWith(
-          type: request?.type ?? RouteType.pushNavigate,
-          arguments: request?.arguments,
-          parent: request?.rootNavigator ?? false ? null : '',
-        );
+    return candidate.copyWith(
+      type: request?.type ?? RouteType.pushNavigate,
+      arguments: request?.arguments,
+      parent: parent,
+    );
   }
 
   @override
