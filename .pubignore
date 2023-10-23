@@ -28,6 +28,7 @@ migrate_working_dir/
 .dart_tool/
 .packages
 build/
+coverage/
 
 test/
 example/ios_route

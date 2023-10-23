@@ -1,5 +1,6 @@
-## 0.0.12
+## 1.0.0
 
+* Added Group Routes
 * Object notation generate (routePaths)
 * Added Middleware
 * Added Relative route
@@ -10,7 +11,6 @@
 
 * Added outlet example
 * Added Layout (RouteOutlet)
-
 
 ## 0.0.3
 

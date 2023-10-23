@@ -17,6 +17,7 @@ class _AppPageState extends State<AppPage> {
     super.initState();
     controller = CupertinoTabController();
     Routefly.listenable.addListener(_listener);
+    _listener();
   }
 
   _listener() {

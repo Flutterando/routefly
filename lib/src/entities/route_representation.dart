@@ -1,19 +1,37 @@
-// ignore_for_file: prefer_constructors_over_static_methods
-// ignore_for_file: leading_newlines_in_multiline_strings
-// ignore_for_file: public_member_api_docs
-
 import 'dart:io';
 
 import 'package:routefly/src/exceptions/exceptions.dart';
 
+/// Represents a route in the application.
 class RouteRepresentation {
+  /// The path for the route.
   final String path;
+
+  /// The parent path for nested routes.
   final String parent;
+
+  /// The function used to build the route.
   final String builder;
+
+  /// Determines if the route is a layout.
   final bool isLayout;
+
+  /// The file containing the route representation.
   final File file;
+
+  /// Index for managing route instances.
   final int index;
 
+  /// Constructs a new [RouteRepresentation].
+  ///
+  /// Parameters:
+  /// - [path]: The path for the route.
+  /// - [file]: The file containing the route representation.
+  /// - [parent]: The parent path for nested routes. Defaults to an
+  /// empty string.
+  /// - [index]: Index for managing route instances.
+  /// - [isLayout]: Determines if the route is a layout. Defaults to false.
+  /// - [builder]: The function used to build the route.
   RouteRepresentation({
     required this.path,
     required this.file,
@@ -23,6 +41,12 @@ class RouteRepresentation {
     required this.builder,
   });
 
+  /// Constructs a [RouteRepresentation] based on an app directory.
+  ///
+  /// Parameters:
+  /// - [appDir]: The application directory.
+  /// - [file]: The file containing the route representation.
+  /// - [index]: Index for managing route instances.
   static RouteRepresentation withAppDir(
     Directory appDir,
     File file,
@@ -41,20 +65,23 @@ class RouteRepresentation {
     );
   }
 
+  /// Resolves the path for the given [file] relative to [appDir].
   static String _pathResolve(
     File file,
     Directory appDir,
   ) {
-    var path = file.parent.path //
-        .replaceFirst(appDir.path, '');
+    var path = file.parent.path.replaceFirst(appDir.path, '');
 
     if (Platform.isWindows) {
       path = path.replaceAll(r'\', '/');
     }
 
+    path = path.replaceAll(RegExp(r'\(.*?\)/'), '/');
+
     return path.isEmpty ? '/' : path;
   }
 
+  /// Fetches the builder function from the given [file].
   static String _getBuilder(File file, int index) {
     final content = file.readAsLinesSync();
 
@@ -97,6 +124,7 @@ class RouteRepresentation {
     )''';
   }
 
+  /// Generates the import statement for the route.
   String get import {
     final path = file.path.replaceFirst('./lib/', '').replaceAll(r'\', '/');
     return "import '$path' as a$index;";
@@ -114,6 +142,8 @@ class RouteRepresentation {
     ].join('\n');
   }
 
+  /// Returns a copy of the current [RouteRepresentation] with
+  /// optional modifications.
   RouteRepresentation copyWith({
     String? path,
     String? parent,

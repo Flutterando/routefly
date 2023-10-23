@@ -7,19 +7,33 @@ import 'custom_navigator.dart';
 import 'inherited_routefly.dart';
 import 'routefly_page.dart';
 
+/// `RouteflyRouterDelegate` is a custom [RouterDelegate] tailored for the
+/// 'Routefly' framework. It manages a list of route configurations and
+/// interacts with Flutter's navigation system to build and manage the
+/// navigation stack based on these configurations.
 class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     with
         ChangeNotifier {
+  /// A list of observers that listen to navigation events.
   final List<NavigatorObserver> observers;
 
+  /// A list of [RouteEntity] configurations currently being managed
+  /// by the delegate.
   List<RouteEntity> configurations = <RouteEntity>[];
 
+  /// Creates an instance of [RouteflyRouterDelegate].
+  ///
+  /// [observers]: A list of navigation event observers.
   RouteflyRouterDelegate(this.observers);
 
   @override
   RouteEntity? currentConfiguration;
 
   @override
+
+  /// Builds the widget representation for the current navigation stack.
+  ///
+  /// If no configurations are available, it returns an empty [Material] widget.
   Widget build(BuildContext context) {
     if (configurations.isEmpty) {
       return const Material();
@@ -39,6 +53,10 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     );
   }
 
+  /// Handles the page popping action.
+  ///
+  /// It removes the popped page's configuration from the list and notifies
+  /// any listeners about the change.
   bool onPopPage(Route<dynamic> route, dynamic result) {
     if (!route.didPop(result) || route.isFirst) {
       return false;
@@ -52,11 +70,15 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
   }
 
   @override
+
+  /// Handles the route popping action.
   Future<bool> popRoute() async {
     return configurations.isNotEmpty;
   }
 
   @override
+
+  /// Updates the current route configurations based on a new [RouteEntity].
   Future<void> setNewRoutePath(RouteEntity configuration) async {
     final routes = _resolveRoute(configuration);
 
@@ -67,8 +89,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
       final acrossRoutes = _across(routes);
       configurations.addAll(
         acrossRoutes.where((element) {
-          final index = configurations.indexOf(element);
-          return index == -1;
+          return configurations.contains(element);
         }),
       );
       currentConfiguration = configuration;
@@ -81,6 +102,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     notifyListeners();
   }
 
+  /// Gets the new list of routes while retaining existing ones.
   List<RouteEntity> _across(List<RouteEntity> routes) {
     final newRoutes = <RouteEntity>[];
 
@@ -96,6 +118,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     return newRoutes;
   }
 
+  /// Resolves the complete list of [RouteEntity] from a given configuration.
   List<RouteEntity> _resolveRoute(RouteEntity configuration) {
     final routes = <RouteEntity>[];
 
@@ -109,6 +132,9 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     return routes;
   }
 
+  /// Prepares a [RouteEntity] by associating it with a [RouteflyPage] and
+  /// taking into account any existing instances of the same route in the
+  /// configuration list.
   RouteEntity _prepareRoute(RouteEntity configuration) {
     final count = configurations.where((r) => r == configuration).length;
     return configuration.copyWith(

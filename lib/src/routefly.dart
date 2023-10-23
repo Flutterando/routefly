@@ -50,8 +50,16 @@ abstract class Routefly {
     return RouteflyState(page, context);
   }
 
-  /// Adds a new route on top of the existing stack.
-  static void pushNavigate(String path, {dynamic arguments}) {
+  /// Navigates to a specified path using [Routefly] and
+  /// pushes the route onto the navigation stack.
+  ///
+  /// - `path` is the destination route's path.
+  /// - `arguments` is an optional set of data to be passed to
+  /// the destination route.
+  static void pushNavigate(
+    String path, {
+    dynamic arguments,
+  }) {
     _verifyInitialization();
 
     final uri = currentUri.resolve(path);
@@ -62,13 +70,21 @@ abstract class Routefly {
         state: RouteRequest(
           arguments: arguments,
           type: RouteType.pushNavigate,
+          rootNavigator: false,
         ),
       ),
     );
   }
 
-  /// Replaces the entire route stack with the given route.
-  static void navigate(String path, {dynamic arguments}) {
+  /// Navigates to a specified path using [Routefly].
+  ///
+  /// - `path` is the destination route's path.
+  /// - `arguments` is an optional set of data to
+  /// be passed to the destination route.
+  static void navigate(
+    String path, {
+    dynamic arguments,
+  }) {
     _verifyInitialization();
 
     final uri = currentUri.resolve(path);
@@ -79,13 +95,24 @@ abstract class Routefly {
         state: RouteRequest(
           arguments: arguments,
           type: RouteType.navigate,
+          rootNavigator: false,
         ),
       ),
     );
   }
 
-  /// Replaces only the last route in the stack with the provided route.
-  static void replace(String path, {dynamic arguments}) {
+  /// Replaces the current route with the route specified by the path.
+  ///
+  /// - `path` is the destination route's path.
+  /// - `arguments` is an optional set of data to be passed
+  /// to the destination route.
+  /// - `rootNavigator` is an optional flag to determine if
+  /// the root navigator should be used.
+  static void replace(
+    String path, {
+    dynamic arguments,
+    bool rootNavigator = false,
+  }) {
     _verifyInitialization();
     final uri = currentUri.resolve(path);
 
@@ -95,13 +122,24 @@ abstract class Routefly {
         state: RouteRequest(
           arguments: arguments,
           type: RouteType.replace,
+          rootNavigator: rootNavigator,
         ),
       ),
     );
   }
 
-  /// Adds a new route on top of the existing stack.
-  static void push(String path, {dynamic arguments}) {
+  /// Pushes the route specified by the path onto the navigation stack.
+  ///
+  /// - `path` is the destination route's path.
+  /// - `arguments` is an optional set of data to be passed
+  /// to the destination route.
+  /// - `rootNavigator` is an optional flag to determine if
+  /// the root navigator should be used.
+  static void push(
+    String path, {
+    dynamic arguments,
+    bool rootNavigator = false,
+  }) {
     _verifyInitialization();
     final uri = currentUri.resolve(path);
 
@@ -111,16 +149,20 @@ abstract class Routefly {
         state: RouteRequest(
           arguments: arguments,
           type: RouteType.push,
+          rootNavigator: rootNavigator,
         ),
       ),
     );
   }
 
   /// Removes the last route from the stack.
-  static void pop(BuildContext context) {
+  static void pop(
+    BuildContext context, {
+    bool rootNavigator = false,
+  }) {
     _verifyInitialization();
 
-    Navigator.of(context).pop();
+    Navigator.of(context, rootNavigator: rootNavigator).pop();
   }
 
   static RouteEntity get _route {
@@ -214,7 +256,11 @@ abstract class Routefly {
     _provider ??= PlatformRouteInformationProvider(
       initialRouteInformation: RouteInformation(
         uri: Uri.parse(initialPath),
-        state: RouteRequest(arguments: null, type: RouteType.navigate),
+        state: RouteRequest(
+          arguments: null,
+          type: RouteType.navigate,
+          rootNavigator: false,
+        ),
       ),
     );
 

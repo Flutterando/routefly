@@ -12,9 +12,4 @@ class RouteflyException implements Exception {
   /// [message]: Exception info
   /// [stackTrace]: traces
   RouteflyException(this.message, [this.stackTrace]);
-
-  @override
-  String toString() {
-    return 'RouteflyException: $message\n${stackTrace ?? StackTrace.current}';
-  }
 }

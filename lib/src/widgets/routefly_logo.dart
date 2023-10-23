@@ -66,7 +66,6 @@ class _RouteflyLogoState extends ImplicitlyAnimatedWidgetState<RouteflyLogo> {
         return SvgPicture(
           colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
           width: _sizeAnimation.value,
-          // Please ensure that the asset path and package name are correct.
           const AssetBytesLoader('assets/logo_text.svg.vec', packageName: 'routefly'),
         );
       },

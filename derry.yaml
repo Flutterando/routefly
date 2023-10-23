@@ -1,0 +1,4 @@
+coverage: 
+  - dart run full_coverage -i html_url_service.dart
+  - flutter test --coverage
+

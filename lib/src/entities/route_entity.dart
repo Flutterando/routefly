@@ -146,14 +146,23 @@ class RouteRequest {
   /// The type of the route.
   final RouteType type;
 
+  /// If rootNavigator is set to true, the state from the furthest instance
+  /// of this class is given instead.
+  /// Useful for pushing contents above all subsequent instances of [Navigator].
+  final bool rootNavigator;
+
   /// Creates a [RouteRequest] with the provided arguments and type.
   RouteRequest({
     required this.arguments,
     required this.type,
+    required this.rootNavigator,
   });
 
   /// Converts the [RouteRequest] to a map representation.
-  Map<String, dynamic> toMap() => <String, dynamic>{'type': type.name};
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'type': type.name,
+        'rootNavigator': rootNavigator,
+      };
 
   /// Creates a [RouteRequest] from its map representation.
   factory RouteRequest.fromMap(Map<String, dynamic> map) {
@@ -162,6 +171,7 @@ class RouteRequest {
       type: RouteType.values.firstWhere(
         (element) => element.name == map['type'],
       ),
+      rootNavigator: map['rootNavigator'],
     );
   }
 

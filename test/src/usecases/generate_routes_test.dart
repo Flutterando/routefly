@@ -38,6 +38,7 @@ void main() {
       '/dashboard/option1',
       '/dashboard/option2',
       '/dashboard/option3',
+      '/dashboard/option4',
     ];
     final text = usecase.generateRecords(paths);
 
@@ -48,6 +49,7 @@ void main() {
     option1: '/dashboard/option1',
     option2: '/dashboard/option2',
     option3: '/dashboard/option3',
+    option4: '/dashboard/option4',
   ),
   product: '/product',
   user: (
@@ -105,14 +107,13 @@ void main() {
   });
 }
 
-const routeFileContents = '''import 'package:flutter/material.dart';
-import 'package:routefly/routefly.dart';
+const routeFileContents = '''import 'package:routefly/routefly.dart';
 
-import './test/mocks/app/app_page.dart' as a5;
-import './test/mocks/app/dashboard/dashboard_layout.dart' as a2;
-import './test/mocks/app/dashboard/option1/option1_page.dart' as a0;
-import './test/mocks/app/dashboard/option2/option2_page.dart' as a1;
-import './test/mocks/app/dashboard/option3/option3_page.dart' as a3;
+import './test/mocks/app/app_page.dart' as a0;
+import './test/mocks/app/dashboard/dashboard_layout.dart' as a1;
+import './test/mocks/app/dashboard/option1/option1_page.dart' as a2;
+import './test/mocks/app/dashboard/option2/option2_page.dart' as a3;
+import './test/mocks/app/dashboard/option3/option3_page.dart' as a4;
 
 List<RouteEntity> get routes => [
   RouteEntity(
@@ -121,7 +122,7 @@ List<RouteEntity> get routes => [
     routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
       ctx,
       settings,
-      const a5.AppPage(),
+      const a0.AppPage(),
     ),
   ),
   RouteEntity(
@@ -130,26 +131,26 @@ List<RouteEntity> get routes => [
     routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
       ctx,
       settings,
-      const a2.DashboardLayout(),
+      const a1.DashboardLayout(),
     ),
   ),
   RouteEntity(
     key: '/dashboard/option1',
     parent: '/dashboard',
     uri: Uri.parse('/dashboard/option1'),
-    routeBuilder: a0.routeBuilder,
+    routeBuilder: a2.routeBuilder,
   ),
   RouteEntity(
     key: '/dashboard/option2',
     parent: '/dashboard',
     uri: Uri.parse('/dashboard/option2'),
-    routeBuilder: a1.routeBuilder,
+    routeBuilder: a3.routeBuilder,
   ),
   RouteEntity(
     key: '/dashboard/option3',
     parent: '/dashboard',
     uri: Uri.parse('/dashboard/option3'),
-    routeBuilder: a3.routeBuilder,
+    routeBuilder: a4.routeBuilder,
   ),
 ];
 
