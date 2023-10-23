@@ -58,7 +58,7 @@ class GenerateRoutes {
       return;
     }
 
-    var entries = <RouteRepresentation>[];
+    final entries = <RouteRepresentation>[];
 
     for (var i = 0; i < files.length; i++) {
       try {
@@ -71,7 +71,7 @@ class GenerateRoutes {
       }
     }
 
-    entries = _addParents(entries);
+    _addParents(entries);
     final paths = entries.map((e) => e.path).toList();
 
     final routeContent = entries.map((e) => e.toString()).join(',\n  ');
@@ -166,27 +166,23 @@ ${generateRecords(paths)}''';
     return resultMap;
   }
 
-  List<RouteRepresentation> _addParents(List<RouteRepresentation> entries) {
-    final layouts = entries.where((e) => e.isLayout).toList();
-    final entriesOrder = entries.toList()
-      ..sort(
-        (a, b) => a.path.compareTo(b.path),
-      );
+  void _addParents(List<RouteRepresentation> routes) {
+    final layoutPaths = routes //
+        .where((route) => route.isLayout)
+        .map((route) => route.path)
+        .toList();
 
-    layouts.sort((a, b) => a.path.compareTo(b.path));
-
-    for (final layout in layouts) {
-      for (var i = 0; i < entriesOrder.length; i++) {
-        var entry = entriesOrder[i];
-        final isParent = entry.path //
-                .startsWith(layout.path) &&
-            layout.path != entry.path;
-        entry = entry.copyWith(parent: isParent ? layout.path : '');
-        entriesOrder[i] = entry;
+    for (var i = 0; i < routes.length; i++) {
+      final route = routes[i];
+      if (!route.isLayout) {
+        for (final layoutPath in layoutPaths) {
+          if (route.path.startsWith(layoutPath)) {
+            routes[i] = route.copyWith(parent: layoutPath);
+            break;
+          }
+        }
       }
     }
-
-    return entriesOrder;
   }
 
   String _generateImports(List<RouteRepresentation> entries) {

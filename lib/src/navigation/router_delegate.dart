@@ -10,21 +10,14 @@ import 'routefly_page.dart';
 class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     with
         ChangeNotifier {
-  final List<NavigatorObserver> _observers;
+  final List<NavigatorObserver> observers;
 
   List<RouteEntity> configurations = <RouteEntity>[];
 
-  RouteflyRouterDelegate(this._observers);
+  RouteflyRouterDelegate(this.observers);
 
   @override
-  RouteEntity? get currentConfiguration {
-    final navigationConfigurations = configurations.where(
-      (e) => e.type == RouteType.navigate,
-    );
-    return navigationConfigurations.isEmpty //
-        ? null
-        : navigationConfigurations.last;
-  }
+  RouteEntity? currentConfiguration;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +25,15 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
       return const Material();
     }
 
+    final pages = configurations
+        .where((e) => e.parent.isEmpty) //
+        .map((e) => e.page)
+        .toList();
+
     return InheritedRoutefly(
       child: CustomNavigator(
-        observers: _observers,
-        pages: configurations
-            .where((e) => e.parent.isEmpty) //
-            .map((e) => e.page)
-            .toList(),
+        observers: observers,
+        pages: pages,
         onPopPage: onPopPage,
       ),
     );
@@ -58,14 +53,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
 
   @override
   Future<bool> popRoute() async {
-    return false;
-  }
-
-  void pop() {
-    if (configurations.length > 1) {
-      configurations.removeLast();
-      notifyListeners();
-    }
+    return configurations.isNotEmpty;
   }
 
   @override
@@ -74,6 +62,16 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
 
     if (configuration.type == RouteType.navigate) {
       configurations = _across(routes);
+      currentConfiguration = configuration;
+    } else if (configuration.type == RouteType.pushNavigate) {
+      final acrossRoutes = _across(routes);
+      configurations.addAll(
+        acrossRoutes.where((element) {
+          final index = configurations.indexOf(element);
+          return index == -1;
+        }),
+      );
+      currentConfiguration = configuration;
     } else if (configuration.type == RouteType.replace) {
       configurations.removeLast();
     } else {

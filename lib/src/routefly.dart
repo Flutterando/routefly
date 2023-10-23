@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 import 'package:routefly/src/entities/route_aggregate.dart';
@@ -46,7 +47,24 @@ abstract class Routefly {
   static RouteflyState of(BuildContext context) {
     final page = ModalRoute.of(context)!.settings as RouteflyPage;
     context.dependOnInheritedWidgetOfExactType<InheritedRoutefly>();
-    return RouteflyState(page);
+    return RouteflyState(page, context);
+  }
+
+  /// Adds a new route on top of the existing stack.
+  static void pushNavigate(String path, {dynamic arguments}) {
+    _verifyInitialization();
+
+    final uri = currentUri.resolve(path);
+
+    _provider!.didPushRouteInformation(
+      RouteInformation(
+        uri: uri,
+        state: RouteRequest(
+          arguments: arguments,
+          type: RouteType.pushNavigate,
+        ),
+      ),
+    );
   }
 
   /// Replaces the entire route stack with the given route.
@@ -99,10 +117,10 @@ abstract class Routefly {
   }
 
   /// Removes the last route from the stack.
-  static void pop() {
+  static void pop(BuildContext context) {
     _verifyInitialization();
 
-    _delegate!.pop();
+    Navigator.of(context).pop();
   }
 
   static RouteEntity get _route {
@@ -112,6 +130,9 @@ abstract class Routefly {
 
   /// Route path uri
   static Uri get currentUri => _delegate!.currentConfiguration!.uri;
+
+  /// Original route path
+  static String get currentOriginalPath => _delegate!.currentConfiguration!.key;
 
   /// Route Parameters
   static RouteflyQuery get query => RouteflyQuery(
@@ -127,12 +148,53 @@ abstract class Routefly {
     }
   }
 
-  static Route _defaultRouteBuilder(
+  /// A utility method to create a [MaterialPageRoute].
+  ///
+  /// This method simplifies the process of creating a [MaterialPageRoute]
+  /// by wrapping the given [child] widget into it, and using
+  /// the provided [settings].
+  ///
+  /// Parameters:
+  /// * [context]: The build context, typically obtained from
+  /// a widget's build method.
+  /// * [settings]: Configuration values for the route created by this builder.
+  /// * [child]: The widget that will be shown when this route
+  /// is pushed onto the navigator.
+  ///
+  /// Returns:
+  /// A [MaterialPageRoute] with the given settings and child.
+  static Route materialRouteBuilder(
     BuildContext context,
     RouteSettings settings,
     Widget child,
   ) {
     return MaterialPageRoute(
+      settings: settings,
+      builder: (context) => child,
+    );
+  }
+
+  /// A utility method to create a [CupertinoPageRoute].
+  ///
+  /// This method simplifies the process of creating a [CupertinoPageRoute]
+  /// by wrapping the given [child] widget into it, and
+  /// using the provided [settings].
+  ///
+  /// Parameters:
+  /// * [context]: The build context, typically obtained from a
+  /// widget's build method.
+  /// * [settings]: Configuration values for the route created by this builder.
+  /// * [child]: The widget that will be shown when this route is
+  /// pushed onto the navigator.
+  ///
+  /// Returns:
+  /// A [CupertinoPageRoute] with the given settings and child.
+  static Route cupertinoRouteBuilder(
+    BuildContext context,
+    RouteSettings settings,
+    Widget child,
+  ) {
+    return CupertinoPageRoute(
       settings: settings,
       builder: (context) => child,
     );
@@ -147,7 +209,7 @@ abstract class Routefly {
     List<NavigatorObserver> observers = const [],
     List<RouteMiddleware> middlewares = const [],
   }) {
-    defaultRouteBuilder = routeBuilder ?? _defaultRouteBuilder;
+    defaultRouteBuilder = routeBuilder ?? materialRouteBuilder;
 
     _provider ??= PlatformRouteInformationProvider(
       initialRouteInformation: RouteInformation(
@@ -156,7 +218,10 @@ abstract class Routefly {
       ),
     );
 
-    _delegate ??= RouteflyRouterDelegate(observers);
+    _delegate ??= RouteflyRouterDelegate([
+      HeroController(),
+      ...observers,
+    ]);
 
     return RouterConfig(
       routerDelegate: _delegate!,

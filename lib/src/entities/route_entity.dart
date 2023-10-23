@@ -14,6 +14,9 @@ enum RouteType {
   /// for navigation
   navigate,
 
+  /// push if not exists
+  pushNavigate,
+
   /// for push
   push,
 

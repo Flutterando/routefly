@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
 import 'routefly_page.dart';
 
 class RouteflyState {
+  final BuildContext _context;
   final RouteflyPage _page;
   late final query = RouteflyQuery(
     _page.entity.uri.queryParameters,
@@ -16,9 +18,15 @@ class RouteflyState {
 
   RouteflyState(
     this._page,
+    this._context,
   );
 
   void navigate(String path, {dynamic arguments}) => Routefly.navigate(
+        path,
+        arguments: arguments,
+      );
+
+  void pushNavigate(String path, {dynamic arguments}) => Routefly.pushNavigate(
         path,
         arguments: arguments,
       );
@@ -30,5 +38,5 @@ class RouteflyState {
         path,
         arguments: arguments,
       );
-  void pop() => Routefly.pop();
+  void pop() => Routefly.pop(_context);
 }

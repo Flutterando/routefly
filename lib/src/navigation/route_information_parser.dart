@@ -36,7 +36,7 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
       );
     }
 
-    final request = routeInformation.state! as RouteRequest;
+    final request = routeInformation.state as RouteRequest?;
 
     for (final middleware in middlewares) {
       routeInformation = await middleware(routeInformation);
@@ -45,8 +45,8 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
     return aggregate
         .findRoute(routeInformation.uri) //
         .copyWith(
-          type: request.type,
-          arguments: request.arguments,
+          type: request?.type ?? RouteType.pushNavigate,
+          arguments: request?.arguments,
         );
   }
 
