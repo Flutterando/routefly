@@ -1,21 +1,20 @@
 import 'package:routefly/routefly.dart';
 
-import 'app/app_layout.dart' as a5;
+import 'app/app_layout.dart' as a0;
 import 'app/tab1/page2/page2_page.dart' as a1;
-import 'app/tab1/tab1_page.dart' as a0;
-import 'app/tab2/page2/page2_page.dart' as a2;
-import 'app/tab2/tab2_page.dart' as a3;
-import 'app/tab3/tab3_page.dart' as a4;
+import 'app/tab1/tab1_page.dart' as a2;
+import 'app/tab2/page2/page2_page.dart' as a3;
+import 'app/tab2/tab2_page.dart' as a4;
+import 'app/tab3/tab3_page.dart' as a5;
 
 List<RouteEntity> get routes => [
   RouteEntity(
-    key: '/tab1',
-    parent: '/',
-    uri: Uri.parse('/tab1'),
+    key: '/',
+    uri: Uri.parse('/'),
     routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
       ctx,
       settings,
-      const a0.Tab1Page(),
+      const a0.AppPage(),
     ),
   ),
   RouteEntity(
@@ -29,13 +28,23 @@ List<RouteEntity> get routes => [
     ),
   ),
   RouteEntity(
+    key: '/tab1',
+    parent: '/',
+    uri: Uri.parse('/tab1'),
+    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+      ctx,
+      settings,
+      const a2.Tab1Page(),
+    ),
+  ),
+  RouteEntity(
     key: '/tab2/page2',
     parent: '/',
     uri: Uri.parse('/tab2/page2'),
     routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
       ctx,
       settings,
-      const a2.Page2Page(),
+      const a3.Page2Page(),
     ),
   ),
   RouteEntity(
@@ -45,7 +54,7 @@ List<RouteEntity> get routes => [
     routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
       ctx,
       settings,
-      const a3.Tab1Page(),
+      const a4.Tab1Page(),
     ),
   ),
   RouteEntity(
@@ -55,16 +64,7 @@ List<RouteEntity> get routes => [
     routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
       ctx,
       settings,
-      const a4.Tab1Page(),
-    ),
-  ),
-  RouteEntity(
-    key: '/',
-    uri: Uri.parse('/'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a5.AppPage(),
+      const a5.Tab1Page(),
     ),
   ),
 ];

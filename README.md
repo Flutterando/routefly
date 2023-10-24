@@ -8,7 +8,7 @@ Routefly is a folder-based route manager inspired by NextJS and created by the F
 
 - `/lib/app/dashboard/dashboard_page.dart` => `/dashboard`
 - `/lib/app/users/users_page.dart` => `/users`
-- `/lib/app/users/[id]/user_page.dart` => `/users/2`
+- `/lib/app/users/[id]_page.dart` => `/users/2`
 
 ![Logo](https://github.com/Flutterando/routefly/blob/main/assets/images/nested_navigation.gif?raw=true)
 
@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-3. Organize your code by creating folders that contain a *_page.dart file for each page. For example:
+3. Organize your code by creating folders that contain a *_page.dart file for each page. 
+For example:
 
 ```
 .

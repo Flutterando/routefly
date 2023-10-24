@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:routefly/src/entities/route_representation.dart';
 import 'package:routefly/src/usecases/generate_routes.dart';
 
 class FileMock implements File {
@@ -26,6 +27,57 @@ class FileMock implements File {
 void main() {
   final appDir = Directory('./test/mocks/app');
   final routeFile = FileMock();
+
+  group('pathResolve', () {
+    test('pathResolve with index page', () {
+      final file = File('./test/mocks/app/dashboard/option1/option1_page.dart');
+      final appDir = Directory('./test/mocks/app');
+      final path = RouteRepresentation.pathResolve(file, appDir);
+
+      expect(path, '/dashboard/option1');
+    });
+
+    test('pathResolve page', () {
+      final file = File('./test/mocks/app/dashboard/option1_page.dart');
+      final appDir = Directory('./test/mocks/app');
+      final path = RouteRepresentation.pathResolve(file, appDir);
+
+      expect(path, '/dashboard/option1');
+    });
+
+    test('pathResolve with index layout', () {
+      final file = File('./test/mocks/app/dashboard/option1/option1_layout.dart');
+      final appDir = Directory('./test/mocks/app');
+      final path = RouteRepresentation.pathResolve(file, appDir);
+
+      expect(path, '/dashboard/option1');
+    });
+
+    test('pathResolve layout', () {
+      final file = File('./test/mocks/app/dashboard/option1_layout.dart');
+      final appDir = Directory('./test/mocks/app');
+      final path = RouteRepresentation.pathResolve(file, appDir);
+
+      expect(path, '/dashboard/option1');
+    });
+
+    test('pathResolve page with group', () {
+      final file = File('./test/mocks/app/(dashboard)/option1_page.dart');
+      final appDir = Directory('./test/mocks/app');
+      final path = RouteRepresentation.pathResolve(file, appDir);
+
+      expect(path, '/option1');
+    });
+
+    test('pathResolve initial page', () {
+      final file = File('./test/mocks/app/app_page.dart');
+      final appDir = Directory('./test/mocks/app');
+      final path = RouteRepresentation.pathResolve(file, appDir);
+
+      expect(path, '/');
+    });
+  });
+
   test('Generate routePahtStrings', () {
     final notExistsDir = Directory('./test2');
     final usecase = GenerateRoutes(notExistsDir, routeFile);
@@ -93,7 +145,7 @@ void main() {
       stream,
       emitsInOrder([
         const ConsoleResponse(
-          message: "option4_page.dart don't contains Page or Layout Widget.",
+          message: "'./test/mocks/app/dashboard/option4/option4_page.dart' don't contains Page or Layout Widget.",
           type: ConsoleResponseType.warning,
         ),
         const ConsoleResponse(
@@ -114,6 +166,10 @@ import './test/mocks/app/dashboard/dashboard_layout.dart' as a1;
 import './test/mocks/app/dashboard/option1/option1_page.dart' as a2;
 import './test/mocks/app/dashboard/option2/option2_page.dart' as a3;
 import './test/mocks/app/dashboard/option3/option3_page.dart' as a4;
+import './test/mocks/app/dashboard2/dashboard2_layout.dart' as a6;
+import './test/mocks/app/dashboard2/option1_page.dart' as a7;
+import './test/mocks/app/dashboard2/option2_page.dart' as a8;
+import './test/mocks/app/dashboard2/option3_page.dart' as a9;
 
 List<RouteEntity> get routes => [
   RouteEntity(
@@ -152,6 +208,33 @@ List<RouteEntity> get routes => [
     uri: Uri.parse('/dashboard/option3'),
     routeBuilder: a4.routeBuilder,
   ),
+  RouteEntity(
+    key: '/dashboard2',
+    uri: Uri.parse('/dashboard2'),
+    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+      ctx,
+      settings,
+      const a6.DashboardLayout(),
+    ),
+  ),
+  RouteEntity(
+    key: '/dashboard2/option1',
+    parent: '/dashboard2',
+    uri: Uri.parse('/dashboard2/option1'),
+    routeBuilder: a7.routeBuilder,
+  ),
+  RouteEntity(
+    key: '/dashboard2/option2',
+    parent: '/dashboard2',
+    uri: Uri.parse('/dashboard2/option2'),
+    routeBuilder: a8.routeBuilder,
+  ),
+  RouteEntity(
+    key: '/dashboard2/option3',
+    parent: '/dashboard2',
+    uri: Uri.parse('/dashboard2/option3'),
+    routeBuilder: a9.routeBuilder,
+  ),
 ];
 
 const routePaths = (
@@ -161,6 +244,12 @@ const routePaths = (
     option1: '/dashboard/option1',
     option2: '/dashboard/option2',
     option3: '/dashboard/option3',
+  ),
+  dashboard2: (
+    path: '/dashboard2',
+    option1: '/dashboard2/option1',
+    option2: '/dashboard2/option2',
+    option3: '/dashboard2/option3',
   ),
 );
 ''';

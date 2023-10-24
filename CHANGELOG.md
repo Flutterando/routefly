@@ -1,3 +1,8 @@
+## 1.0.2
+
+* Fix dynamic file notion
+`app/user_page.dart` => `/user`
+
 ## 1.0.1
 
 * Added Group Routes

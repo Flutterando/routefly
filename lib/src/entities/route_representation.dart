@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:routefly/src/exceptions/exceptions.dart';
 
 /// Represents a route in the application.
@@ -52,8 +53,8 @@ class RouteRepresentation {
     File file,
     int index,
   ) {
-    final isLayout = file.path.endsWith('_layout.dart');
-    final path = _pathResolve(file, appDir);
+    final isLayout = file.path.endsWith('layout.dart');
+    final path = pathResolve(file, appDir);
     final builder = _getBuilder(file, index);
 
     return RouteRepresentation(
@@ -66,19 +67,39 @@ class RouteRepresentation {
   }
 
   /// Resolves the path for the given [file] relative to [appDir].
-  static String _pathResolve(
+  @visibleForTesting
+  static String pathResolve(
     File file,
     Directory appDir,
   ) {
-    var path = file.parent.path.replaceFirst(appDir.path, '');
+    var path = file.path;
 
     if (Platform.isWindows) {
       path = path.replaceAll(r'\', '/');
     }
 
-    path = path.replaceAll(RegExp(r'\(.*?\)/'), '/');
+    path = path
+        .split('/') //
+        .where((e) => !RegExp(r'\(.+\)').hasMatch(e))
+        .join('/');
+
+    path = _removeSuffix(path);
+    path = path.replaceFirst(appDir.path, '');
 
     return path.isEmpty ? '/' : path;
+  }
+
+  static String _removeSuffix(String path) {
+    // Remover sufixo
+    var newPath = path.replaceAll(RegExp(r'(_page|_layout)\.dart$'), '');
+
+    // Remover duplicação após a última barra
+    final lastPart = newPath.split('/').last;
+    if (newPath.endsWith('/$lastPart/$lastPart')) {
+      newPath = newPath.replaceAll(RegExp('/$lastPart\$'), '');
+    }
+
+    return newPath;
   }
 
   /// Fetches the builder function from the given [file].
@@ -98,7 +119,7 @@ class RouteRepresentation {
 
     if (line.isEmpty) {
       throw RouteflyException(
-        '${file.path.split(Platform.pathSeparator).last} '
+        "'${file.path.replaceAll(r'\', '/')}' "
         "don't contains Page or Layout Widget.",
       );
     }

@@ -174,12 +174,16 @@ ${generateRecords(paths)}''';
 
     for (var i = 0; i < routes.length; i++) {
       final route = routes[i];
-      if (!route.isLayout) {
-        for (final layoutPath in layoutPaths) {
-          if (route.path.startsWith(layoutPath)) {
-            routes[i] = route.copyWith(parent: layoutPath);
-            break;
-          }
+      for (final layoutPath in layoutPaths) {
+        var pathCondition = layoutPath;
+        if (layoutPath != '/') {
+          pathCondition = '$layoutPath/';
+        }
+        if (route.path != layoutPath //
+            &&
+            route.path.startsWith(pathCondition)) {
+          routes[i] = route.copyWith(parent: layoutPath);
+          break;
         }
       }
     }
