@@ -31,9 +31,9 @@ build/
 coverage/
 
 test/
-example/ios_route
-example/simple
-example/outlet
+example/ios_route/
+example/simple/
+example/outlet/
 
 assets/images/
 assets/svgs/

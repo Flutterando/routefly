@@ -6,11 +6,8 @@ Routefly is a folder-based route manager inspired by NextJS and created by the F
 
 **Example:**
 
-- `/lib/app/dashboard/dashboard_page.dart` => `/dashboard`
-- `/lib/app/users/users_page.dart` => `/users`
-- `/lib/app/users/[id]_page.dart` => `/users/2`
 
-![Logo](https://github.com/Flutterando/routefly/blob/main/assets/images/nested_navigation.gif?raw=true)
+![Logo](https://github.com/Flutterando/routefly/blob/main/assets/images/routefly_scheme.png?raw=true)
 
 ## Installation and Initialization
 
@@ -32,7 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerDelegate: Routefly.routerConfig(
-        routes: routes,
+        routes: routes, // GENERATED
       ),
     );
   }
@@ -71,8 +68,8 @@ A route group can be created by wrapping a folder's name in parenthesis: `(folde
 .
 └── app/
     ├── (product)/
-    │   └── home/
-              └── home_page.dart
+        └── home/
+            └── home_page.dart
 ```
 Generate => `/home`;
 
@@ -147,11 +144,11 @@ It is also possible to change the global transition of the routes:
 ```dart
 @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return CupertinoApp.router(
       routerConfig: Routefly.routerConfig(
         routes: routes,
         routeBuilder: (context, settings, child) {
-          return MaterialPageRoute(
+          return CupertinoPageRoute(
             settings: settings, // !! IMPORTANT !!
             builder: (context) => child,
           );
@@ -183,14 +180,10 @@ In the Layout Widget, add `RouterOutlet()` wherever you prefer nested routes to 
 ex:
 
 ```dart
-...
-Expanded(
-    flex: 3,
-    child: RouterOutlet(),
-),
-...
+RouterOutlet(),
 
 ```
+![Logo](https://github.com/Flutterando/routefly/blob/main/assets/images/nested_navigation.gif?raw=true)
 
 ## Middleware
 

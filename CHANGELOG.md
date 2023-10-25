@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Fix documentation
+
 ## 1.0.2
 
 * Fix dynamic file notion
