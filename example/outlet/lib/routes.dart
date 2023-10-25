@@ -7,43 +7,43 @@ import 'app/dashboard/option2_page.dart' as a3;
 import 'app/dashboard/option3_page.dart' as a4;
 
 List<RouteEntity> get routes => [
-  RouteEntity(
-    key: '/',
-    uri: Uri.parse('/'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a0.AppPage(),
-    ),
-  ),
-  RouteEntity(
-    key: '/dashboard',
-    uri: Uri.parse('/dashboard'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a1.DashboardLayout(),
-    ),
-  ),
-  RouteEntity(
-    key: '/dashboard/option1',
-    parent: '/dashboard',
-    uri: Uri.parse('/dashboard/option1'),
-    routeBuilder: a2.routeBuilder,
-  ),
-  RouteEntity(
-    key: '/dashboard/option2',
-    parent: '/dashboard',
-    uri: Uri.parse('/dashboard/option2'),
-    routeBuilder: a3.routeBuilder,
-  ),
-  RouteEntity(
-    key: '/dashboard/option3',
-    parent: '/dashboard',
-    uri: Uri.parse('/dashboard/option3'),
-    routeBuilder: a4.routeBuilder,
-  ),
-];
+      RouteEntity(
+        key: '/',
+        uri: Uri.parse('/'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a0.AppPage(),
+        ),
+      ),
+      RouteEntity(
+        key: '/dashboard',
+        uri: Uri.parse('/dashboard'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a1.DashboardLayout(),
+        ),
+      ),
+      RouteEntity(
+        key: '/dashboard/option1',
+        parent: '/dashboard',
+        uri: Uri.parse('/dashboard/option1'),
+        routeBuilder: a2.routeBuilder,
+      ),
+      RouteEntity(
+        key: '/dashboard/option2',
+        parent: '/dashboard',
+        uri: Uri.parse('/dashboard/option2'),
+        routeBuilder: a3.routeBuilder,
+      ),
+      RouteEntity(
+        key: '/dashboard/option3',
+        parent: '/dashboard',
+        uri: Uri.parse('/dashboard/option3'),
+        routeBuilder: a4.routeBuilder,
+      ),
+    ];
 
 const routePaths = (
   path: '/',

@@ -46,7 +46,8 @@ void main() {
     });
 
     test('pathResolve with index layout', () {
-      final file = File('./test/mocks/app/dashboard/option1/option1_layout.dart');
+      final file =
+          File('./test/mocks/app/dashboard/option1/option1_layout.dart');
       final appDir = Directory('./test/mocks/app');
       final path = RouteRepresentation.pathResolve(file, appDir);
 
@@ -145,7 +146,8 @@ void main() {
       stream,
       emitsInOrder([
         const ConsoleResponse(
-          message: "'./test/mocks/app/dashboard/option4/option4_page.dart' don't contains Page or Layout Widget.",
+          message:
+              "'./test/mocks/app/dashboard/option4/option4_page.dart' don't contains Page or Layout Widget.",
           type: ConsoleResponseType.warning,
         ),
         const ConsoleResponse(

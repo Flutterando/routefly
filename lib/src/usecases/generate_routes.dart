@@ -144,7 +144,10 @@ ${generateRecords(paths)}''';
     final resultMap = <String, dynamic>{};
 
     for (final path in paths) {
-      final segments = path.split('/').where((segment) => segment.isNotEmpty).toList();
+      final segments = path //
+          .split('/')
+          .where((segment) => segment.isNotEmpty)
+          .toList();
 
       var currentMap = resultMap;
       for (var i = 0; i < segments.length; i++) {

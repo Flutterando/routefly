@@ -8,66 +8,66 @@ import 'app/tab2/tab2_page.dart' as a4;
 import 'app/tab3/tab3_page.dart' as a5;
 
 List<RouteEntity> get routes => [
-  RouteEntity(
-    key: '/',
-    uri: Uri.parse('/'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a0.AppPage(),
-    ),
-  ),
-  RouteEntity(
-    key: '/tab1/page2',
-    parent: '/',
-    uri: Uri.parse('/tab1/page2'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a1.Page2Page(),
-    ),
-  ),
-  RouteEntity(
-    key: '/tab1',
-    parent: '/',
-    uri: Uri.parse('/tab1'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a2.Tab1Page(),
-    ),
-  ),
-  RouteEntity(
-    key: '/tab2/page2',
-    parent: '/',
-    uri: Uri.parse('/tab2/page2'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a3.Page2Page(),
-    ),
-  ),
-  RouteEntity(
-    key: '/tab2',
-    parent: '/',
-    uri: Uri.parse('/tab2'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a4.Tab1Page(),
-    ),
-  ),
-  RouteEntity(
-    key: '/tab3',
-    parent: '/',
-    uri: Uri.parse('/tab3'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a5.Tab1Page(),
-    ),
-  ),
-];
+      RouteEntity(
+        key: '/',
+        uri: Uri.parse('/'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a0.AppPage(),
+        ),
+      ),
+      RouteEntity(
+        key: '/tab1/page2',
+        parent: '/',
+        uri: Uri.parse('/tab1/page2'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a1.Page2Page(),
+        ),
+      ),
+      RouteEntity(
+        key: '/tab1',
+        parent: '/',
+        uri: Uri.parse('/tab1'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a2.Tab1Page(),
+        ),
+      ),
+      RouteEntity(
+        key: '/tab2/page2',
+        parent: '/',
+        uri: Uri.parse('/tab2/page2'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a3.Page2Page(),
+        ),
+      ),
+      RouteEntity(
+        key: '/tab2',
+        parent: '/',
+        uri: Uri.parse('/tab2'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a4.Tab1Page(),
+        ),
+      ),
+      RouteEntity(
+        key: '/tab3',
+        parent: '/',
+        uri: Uri.parse('/tab3'),
+        routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
+          ctx,
+          settings,
+          const a5.Tab1Page(),
+        ),
+      ),
+    ];
 
 const routePaths = (
   path: '/',
