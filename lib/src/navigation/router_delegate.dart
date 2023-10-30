@@ -14,6 +14,8 @@ import 'routefly_page.dart';
 class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     with
         ChangeNotifier {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   /// A list of observers that listen to navigation events.
   final List<NavigatorObserver> observers;
 
@@ -46,6 +48,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
 
     return InheritedRoutefly(
       child: CustomNavigator(
+        key: _navigatorKey,
         observers: observers,
         pages: pages,
         onPopPage: onPopPage,
@@ -72,8 +75,8 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
   @override
 
   /// Handles the route popping action.
-  Future<bool> popRoute() async {
-    return configurations.isNotEmpty;
+  Future<bool> popRoute() {
+    return _navigatorKey.currentState!.maybePop();
   }
 
   @override

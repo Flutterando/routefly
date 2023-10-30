@@ -1,3 +1,9 @@
+## 1.0.4
+
+* Removed SVG packages.
+* Update Routefly Logo Widget.
+* Fix physic back button pop.
+
 ## 1.0.3
 
 * Fix documentation
