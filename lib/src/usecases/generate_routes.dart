@@ -118,11 +118,12 @@ ${generateRecords(paths)}''';
     }
 
     jsonMap.forEach((key, value) {
-      final newKey = key == 'path'
+      var newKey = key == 'path'
           ? 'path'
           : key //
               .replaceAll('[', r'$')
               .replaceAll(']', '');
+      newKey = snackCaseToCamelCase(newKey);
       if (value.isEmpty) {
         output.add("${_indentation(depth)}$newKey: '$prefix/$key',");
       } else {
@@ -134,6 +135,14 @@ ${generateRecords(paths)}''';
     });
 
     return output.join('\n');
+  }
+
+  String snackCaseToCamelCase(String key) {
+    final segments = key.split('_');
+    final firstSegment = segments.first;
+    final restSegments = segments.sublist(1);
+    final camelCaseSegments = restSegments.map((segment) => segment[0].toUpperCase() + segment.substring(1));
+    return firstSegment + camelCaseSegments.join();
   }
 
   String _indentation(int depth) {

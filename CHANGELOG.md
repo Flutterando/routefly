@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Generate Records with CamelCase;
+
 ## 1.0.4
 
 * Removed SVG packages.

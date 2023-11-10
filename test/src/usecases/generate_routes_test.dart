@@ -46,8 +46,7 @@ void main() {
     });
 
     test('pathResolve with index layout', () {
-      final file =
-          File('./test/mocks/app/dashboard/option1/option1_layout.dart');
+      final file = File('./test/mocks/app/dashboard/option1/option1_layout.dart');
       final appDir = Directory('./test/mocks/app');
       final path = RouteRepresentation.pathResolve(file, appDir);
 
@@ -79,6 +78,14 @@ void main() {
     });
   });
 
+  test('snack case to camel', () {
+    final usecase = GenerateRoutes(appDir, routeFile);
+
+    expect(usecase.snackCaseToCamelCase('test_camel_case'), 'testCamelCase');
+    expect(usecase.snackCaseToCamelCase('test_one'), 'testOne');
+    expect(usecase.snackCaseToCamelCase('test'), 'test');
+  });
+
   test('Generate routePahtStrings', () {
     final notExistsDir = Directory('./test2');
     final usecase = GenerateRoutes(notExistsDir, routeFile);
@@ -92,6 +99,7 @@ void main() {
       '/dashboard/option2',
       '/dashboard/option3',
       '/dashboard/option4',
+      '/test_camel_case',
     ];
     final text = usecase.generateRecords(paths);
 
@@ -109,6 +117,7 @@ void main() {
     path: '/user',
     $id: '/user/[id]',
   ),
+  testCamelCase: '/test_camel_case',
 );
 ''');
   });
@@ -146,8 +155,7 @@ void main() {
       stream,
       emitsInOrder([
         const ConsoleResponse(
-          message:
-              "'./test/mocks/app/dashboard/option4/option4_page.dart' don't contains Page or Layout Widget.",
+          message: "'./test/mocks/app/dashboard/option4/option4_page.dart' don't contains Page or Layout Widget.",
           type: ConsoleResponseType.warning,
         ),
         const ConsoleResponse(
