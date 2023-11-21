@@ -86,7 +86,7 @@ Routefly provides simple navigation methods:
 **You can use `RELATIVE PATH` also**;
 
 
-It is also possible to access routes using Record `routesPath` which replaces the strings
+It is also possible to access routes using Record `routePaths` which replaces the strings
 which represent the `path` by an object notation.
 
 ```dart
@@ -94,7 +94,7 @@ which represent the `path` by an object notation.
 Routefly.navigate('/dashboard/users');
 
 // Object Notation
-Routefly.navigate(routesPath.dashboard.users);
+Routefly.navigate(routePaths.dashboard.users);
 ```
 
 `Dynamic routes` are also represented by objects, but it is necessary to replace the dynamic parameters;<br>
@@ -105,7 +105,7 @@ Use the `changes()` method to do this;
 Routefly.navigate('/product/1');
 
 // Object Notation => /product/[id]
-Routefly.navigate(routesPath.product.changes({'id': '1'}));
+Routefly.navigate(routePaths.product.changes({'id': '1'}));
 ```
 
 
