@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerDelegate: Routefly.routerConfig(
+      routerConfig: Routefly.routerConfig(
         routes: routes, // GENERATED
       ),
     );
