@@ -41,6 +41,13 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
   ) async {
     final urlService = UrlService.create();
 
+    if (routeInformation.state is String) {
+      routeInformation = RouteInformation(
+        uri: routeInformation.uri,
+        state: RouteRequest.fromJson(routeInformation.state! as String),
+      );
+    }
+
     // Adjust the route information based on the platform-specific path
     // when accessing for the first time.
     if (_firstAccess) {

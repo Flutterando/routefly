@@ -30,8 +30,8 @@ typedef RouteBuilderWithChild = Route Function(
 /// structure
 /// your folders appropriately inside the "lib/app" directory.
 abstract class Routefly {
-  static PlatformRouteInformationProvider? _provider;
   static RouteflyRouterDelegate? _delegate;
+  static RouteflyInformationParser? _provider;
 
   /// The default route builder used by [Routefly].
   static late RouteBuilderWithChild defaultRouteBuilder;
@@ -56,24 +56,25 @@ abstract class Routefly {
   /// - `path` is the destination route's path.
   /// - `arguments` is an optional set of data to be passed to
   /// the destination route.
-  static void pushNavigate(
+  static Future<void> pushNavigate(
     String path, {
     dynamic arguments,
-  }) {
+  }) async {
     _verifyInitialization();
 
     final uri = currentUri.resolve(path);
-
-    _provider!.didPushRouteInformation(
-      RouteInformation(
-        uri: uri,
-        state: RouteRequest(
-          arguments: arguments,
-          type: RouteType.pushNavigate,
-          rootNavigator: false,
-        ),
+    final info = RouteInformation(
+      uri: uri,
+      state: RouteRequest(
+        arguments: arguments,
+        type: RouteType.pushNavigate,
+        rootNavigator: false,
       ),
     );
+
+    return _provider! //
+        .parseRouteInformation(info)
+        .then(_delegate!.setNewRoutePath);
   }
 
   /// Navigates to a specified path using [Routefly].
@@ -81,7 +82,7 @@ abstract class Routefly {
   /// - `path` is the destination route's path.
   /// - `arguments` is an optional set of data to
   /// be passed to the destination route.
-  static void navigate(
+  static Future<void> navigate(
     String path, {
     dynamic arguments,
   }) {
@@ -89,16 +90,18 @@ abstract class Routefly {
 
     final uri = currentUri.resolve(path);
 
-    _provider!.didPushRouteInformation(
-      RouteInformation(
-        uri: uri,
-        state: RouteRequest(
-          arguments: arguments,
-          type: RouteType.navigate,
-          rootNavigator: false,
-        ),
+    final info = RouteInformation(
+      uri: uri,
+      state: RouteRequest(
+        arguments: arguments,
+        type: RouteType.navigate,
+        rootNavigator: false,
       ),
     );
+
+    return _provider! //
+        .parseRouteInformation(info)
+        .then(_delegate!.setNewRoutePath);
   }
 
   /// Replaces the current route with the route specified by the path.
@@ -108,24 +111,25 @@ abstract class Routefly {
   /// to the destination route.
   /// - `rootNavigator` is an optional flag to determine if
   /// the root navigator should be used.
-  static void replace(
+  static Future<void> replace(
     String path, {
     dynamic arguments,
     bool rootNavigator = false,
   }) {
     _verifyInitialization();
     final uri = currentUri.resolve(path);
-
-    _provider!.didPushRouteInformation(
-      RouteInformation(
-        uri: uri,
-        state: RouteRequest(
-          arguments: arguments,
-          type: RouteType.replace,
-          rootNavigator: rootNavigator,
-        ),
+    final info = RouteInformation(
+      uri: uri,
+      state: RouteRequest(
+        arguments: arguments,
+        type: RouteType.replace,
+        rootNavigator: rootNavigator,
       ),
     );
+
+    return _provider! //
+        .parseRouteInformation(info)
+        .then(_delegate!.setNewRoutePath);
   }
 
   /// Pushes the route specified by the path onto the navigation stack.
@@ -135,24 +139,25 @@ abstract class Routefly {
   /// to the destination route.
   /// - `rootNavigator` is an optional flag to determine if
   /// the root navigator should be used.
-  static void push(
+  static Future<void> push(
     String path, {
     dynamic arguments,
     bool rootNavigator = false,
   }) {
     _verifyInitialization();
     final uri = currentUri.resolve(path);
-
-    _provider!.didPushRouteInformation(
-      RouteInformation(
-        uri: uri,
-        state: RouteRequest(
-          arguments: arguments,
-          type: RouteType.push,
-          rootNavigator: rootNavigator,
-        ),
+    final info = RouteInformation(
+      uri: uri,
+      state: RouteRequest(
+        arguments: arguments,
+        type: RouteType.push,
+        rootNavigator: rootNavigator,
       ),
     );
+
+    return _provider! //
+        .parseRouteInformation(info)
+        .then(_delegate!.setNewRoutePath);
   }
 
   /// Removes the last route from the stack.
@@ -253,15 +258,12 @@ abstract class Routefly {
   }) {
     defaultRouteBuilder = routeBuilder ?? materialRouteBuilder;
 
-    _provider ??= PlatformRouteInformationProvider(
-      initialRouteInformation: RouteInformation(
-        uri: Uri.parse(initialPath),
-        state: RouteRequest(
-          arguments: null,
-          type: RouteType.navigate,
-          rootNavigator: false,
-        ),
+    _provider ??= RouteflyInformationParser(
+      RouteAggregate(
+        routes: routes,
+        notFoundPath: notFoundPath,
       ),
+      middlewares,
     );
 
     _delegate ??= RouteflyRouterDelegate([
@@ -271,14 +273,17 @@ abstract class Routefly {
 
     return RouterConfig(
       routerDelegate: _delegate!,
-      routeInformationParser: RouteflyInformationParser(
-        RouteAggregate(
-          routes: routes,
-          notFoundPath: notFoundPath,
+      routeInformationParser: _provider,
+      routeInformationProvider: PlatformRouteInformationProvider(
+        initialRouteInformation: RouteInformation(
+          uri: Uri.parse(initialPath),
+          state: RouteRequest(
+            arguments: null,
+            type: RouteType.navigate,
+            rootNavigator: false,
+          ),
         ),
-        middlewares,
       ),
-      routeInformationProvider: _provider,
       backButtonDispatcher: RootBackButtonDispatcher(),
     );
   }

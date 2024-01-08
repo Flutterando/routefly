@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Fix: Navigation History (Browser);
+
 ## 1.0.5
 
 * Generate Records with CamelCase;
