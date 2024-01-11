@@ -1,3 +1,4 @@
+import 'package:example/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
@@ -19,7 +20,7 @@ class _UsersPageState extends State<UsersPage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Routefly.push('/users/2');
+            Routefly.push(routePaths.users.$id.changes({'idx': '2'}));
           },
           child: const Text('Usuario 2'),
         ),

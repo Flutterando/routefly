@@ -32,6 +32,7 @@ typedef RouteBuilderWithChild = Route Function(
 abstract class Routefly {
   static RouteflyRouterDelegate? _delegate;
   static RouteflyInformationParser? _provider;
+  static PlatformRouteInformationProvider? _infoProvider;
 
   /// The default route builder used by [Routefly].
   static late RouteBuilderWithChild defaultRouteBuilder;
@@ -266,6 +267,17 @@ abstract class Routefly {
       middlewares,
     );
 
+    _infoProvider ??= PlatformRouteInformationProvider(
+      initialRouteInformation: RouteInformation(
+        uri: Uri.parse(initialPath),
+        state: RouteRequest(
+          arguments: null,
+          type: RouteType.navigate,
+          rootNavigator: false,
+        ),
+      ),
+    );
+
     _delegate ??= RouteflyRouterDelegate([
       HeroController(),
       ...observers,
@@ -274,16 +286,7 @@ abstract class Routefly {
     return RouterConfig(
       routerDelegate: _delegate!,
       routeInformationParser: _provider,
-      routeInformationProvider: PlatformRouteInformationProvider(
-        initialRouteInformation: RouteInformation(
-          uri: Uri.parse(initialPath),
-          state: RouteRequest(
-            arguments: null,
-            type: RouteType.navigate,
-            rootNavigator: false,
-          ),
-        ),
-      ),
+      routeInformationProvider: _infoProvider,
       backButtonDispatcher: RootBackButtonDispatcher(),
     );
   }

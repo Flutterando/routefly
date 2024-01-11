@@ -1,3 +1,7 @@
+## 1.0.7
+
+* Fix: Hotreload restart routes;
+
 ## 1.0.6
 
 * Fix: Navigation History (Browser);
