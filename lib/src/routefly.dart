@@ -180,7 +180,11 @@ abstract class Routefly {
   static Uri get currentUri => _delegate!.currentConfiguration!.uri;
 
   /// Original route path
-  static String get currentOriginalPath => _delegate!.currentConfiguration!.key;
+  static String get currentOriginalPath => _delegate! //
+      .configurations
+      .last
+      .uri
+      .path;
 
   /// Route Parameters
   static RouteflyQuery get query => RouteflyQuery(

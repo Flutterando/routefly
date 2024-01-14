@@ -1,3 +1,7 @@
+## 1.0.8
+
+* Fix: Original route path
+
 ## 1.0.7
 
 * Fix: Hotreload restart routes;
