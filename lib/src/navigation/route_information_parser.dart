@@ -53,7 +53,9 @@ class RouteflyInformationParser extends RouteInformationParser<RouteEntity> {
     if (_firstAccess) {
       var uri = routeInformation.uri;
       final nativePath = urlService.getPath();
-      uri = nativePath != null ? Uri.parse(nativePath) : uri;
+      if (nativePath != null && nativePath != '/') {
+        uri = Uri.parse(nativePath);
+      }
       _firstAccess = false;
       routeInformation = RouteInformation(
         uri: uri,
