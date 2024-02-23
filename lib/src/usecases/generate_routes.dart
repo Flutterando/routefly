@@ -137,11 +137,13 @@ ${generateRecords(paths)}''';
     return output.join('\n');
   }
 
+  /// Converts snake_case to camelCase.
   String snackCaseToCamelCase(String key) {
     final segments = key.split('_');
     final firstSegment = segments.first;
     final restSegments = segments.sublist(1);
-    final camelCaseSegments = restSegments.map((segment) => segment[0].toUpperCase() + segment.substring(1));
+    final camelCaseSegments = restSegments
+        .map((segment) => segment[0].toUpperCase() + segment.substring(1));
     return firstSegment + camelCaseSegments.join();
   }
 

@@ -44,7 +44,7 @@ class _CustomNavigatorState extends NavigatorState {
     String routeName, {
     Object? arguments,
   }) async {
-    Routefly.push(routeName, arguments: arguments);
+    await Routefly.push(routeName, arguments: arguments);
     return null;
   }
 
@@ -60,7 +60,7 @@ class _CustomNavigatorState extends NavigatorState {
     TO? result,
     Object? arguments,
   }) async {
-    Routefly.replace(routeName, arguments: arguments);
+    await Routefly.replace(routeName, arguments: arguments);
     return null;
   }
 }
