@@ -1,4 +1,7 @@
-## 1.0.8
+## 1.0.9
+
+* Fix: web initial route
+
 
 * Fix: Original route path
 
