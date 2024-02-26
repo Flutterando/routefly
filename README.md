@@ -183,6 +183,45 @@ ex:
 RouterOutlet(),
 
 ```
+### Tip
+If the error occurs:<br>
+EXCEPTION CAUGHT BY RENDERING LIBRARY <br>
+The following assertion was thrown during performResize().
+
+This error usually occurs in lists, columns and rows when an element does not have a defined size. To fix it, you can use, for example, Expanded, Center or SizedBox. In this example, I chose to use Expanded.
+
+```dart
+class DashboardLayout extends StatelessWidget {
+  const DashboardLayout({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            ListTile(
+              title: const Text('Option 1'),
+              onTap: () {
+                Routefly.navigate(routePaths.dashboard.products);
+              },
+            ),
+            ListTile(
+              title: const Text('Option 2'),
+              onTap: () {
+                Routefly.navigate(routePaths.dashboard.users);
+              },
+            ),
+            const Expanded(child: RouterOutlet()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+```
+
 ![Logo](https://github.com/Flutterando/routefly/blob/main/assets/images/nested_navigation.gif?raw=true)
 
 ## Middleware
