@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:ios_route/routes.dart';
+import 'package:ios_route/routes.g.dart';
 import 'package:routefly/routefly.dart';
 
 class AppPage extends StatefulWidget {

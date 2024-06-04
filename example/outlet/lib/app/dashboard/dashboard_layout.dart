@@ -1,4 +1,4 @@
-import 'package:example/routes.dart';
+import 'package:example/routes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
@@ -23,9 +23,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
               child: ListenableBuilder(
                 listenable: Routefly.listenable,
                 builder: (context, snapshot) {
-                  final path = Routefly.currentUri.pathSegments.isEmpty
-                      ? ''
-                      : Routefly.currentUri.pathSegments.last;
+                  final path = Routefly.currentUri.pathSegments.isEmpty ? '' : Routefly.currentUri.pathSegments.last;
                   return ListView(
                     children: [
                       ListTile(

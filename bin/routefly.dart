@@ -6,7 +6,7 @@ Future<void> main(List<String> args) async {
   final flag = args.isEmpty ? '--generate' : args.first;
 
   final appDir = Directory('./lib/app');
-  final routeFile = File('${appDir.parent.path}/routes.dart');
+  final routeFile = File('${appDir.parent.path}/routes.g.dart');
 
   final generate = GenerateRoutes(appDir, routeFile);
 

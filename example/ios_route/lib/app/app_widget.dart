@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:routefly/routefly.dart';
 
-import '../routes.dart';
+import '../routes.g.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});

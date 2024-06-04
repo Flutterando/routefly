@@ -1,3 +1,8 @@
+## 2.0.0
+
+* BREAKING CHANGE: generated file is `routes.g.dart`.
+Delete `routes.dart` and fix imports in pages.
+
 ## 1.0.9
 
 * Fix: web initial route

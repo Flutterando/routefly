@@ -159,7 +159,7 @@ void main() {
           type: ConsoleResponseType.warning,
         ),
         const ConsoleResponse(
-          message: 'Generated! lib/routes.dart 🚀',
+          message: 'Generated! lib/routes.g.dart 🚀',
           type: ConsoleResponseType.success,
         ),
       ]),
