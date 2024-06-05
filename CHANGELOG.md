@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Fix: push return result;
+
 ## 2.0.1
 
 * Fix: format

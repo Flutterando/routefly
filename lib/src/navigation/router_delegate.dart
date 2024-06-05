@@ -66,6 +66,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     }
 
     final page = route.settings as RouteflyPage;
+    page.entity.popCallback?.call(result);
     configurations.removeWhere((e) => e.page.key == page.key);
     notifyListeners();
 

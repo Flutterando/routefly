@@ -43,9 +43,8 @@ class _CustomNavigatorState extends NavigatorState {
   Future<T?> pushNamed<T extends Object?>(
     String routeName, {
     Object? arguments,
-  }) async {
-    await Routefly.push(routeName, arguments: arguments);
-    return null;
+  }) {
+    return Routefly.push<T>(routeName, arguments: arguments);
   }
 
   @override

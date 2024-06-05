@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
@@ -140,11 +142,11 @@ abstract class Routefly {
   /// to the destination route.
   /// - `rootNavigator` is an optional flag to determine if
   /// the root navigator should be used.
-  static Future<void> push(
+  static Future<T> push<T>(
     String path, {
     dynamic arguments,
     bool rootNavigator = false,
-  }) {
+  }) async {
     _verifyInitialization();
     final uri = currentUri.resolve(path);
     final info = RouteInformation(
@@ -156,19 +158,25 @@ abstract class Routefly {
       ),
     );
 
-    return _provider! //
+    final popCompleter = Completer();
+
+    await _provider! //
         .parseRouteInformation(info)
+        .then((entity) => entity.copyWith(popCallback: popCompleter.complete))
         .then(_delegate!.setNewRoutePath);
+
+    return (await popCompleter.future) as T;
   }
 
   /// Removes the last route from the stack.
-  static void pop(
+  static void pop<T>(
     BuildContext context, {
     bool rootNavigator = false,
+    T? result,
   }) {
     _verifyInitialization();
 
-    Navigator.of(context, rootNavigator: rootNavigator).pop();
+    Navigator.of(context, rootNavigator: rootNavigator).pop<T>(result);
   }
 
   static RouteEntity get _route {

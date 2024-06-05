@@ -1,3 +1,4 @@
+import 'package:example/routes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
@@ -15,8 +16,9 @@ class AppPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () {
-                Routefly.push('/users', arguments: 1);
+              onPressed: () async {
+                final result = await Routefly.push<WillClass>(routePaths.users.path, arguments: 1);
+                print(result.name);
               },
               child: const Text('To User'),
             ),
@@ -32,4 +34,10 @@ class AppPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class WillClass {
+  final String name;
+
+  WillClass(this.name);
 }

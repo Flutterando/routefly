@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,9 @@ typedef RouteBuilder = Route Function(
   BuildContext context,
   RouteSettings settings,
 );
+
+/// Typedef for a function that handles the result of a pop operation.
+typedef PopCallback = void Function([FutureOr<dynamic>? value]);
 
 /// Enumeration defining the type of the route action.
 enum RouteType {
@@ -51,8 +55,11 @@ class RouteEntity {
   /// The parameters of the route.
   final Map<String, dynamic> params;
 
-  ///
+  /// arguments
   final dynamic arguments;
+
+  /// for pop result
+  final PopCallback? popCallback;
 
   /// Creates a [RouteEntity] with the provided parameters.
   RouteEntity({
@@ -64,6 +71,7 @@ class RouteEntity {
     Page? page,
     this.params = const {},
     this.arguments,
+    this.popCallback,
     this.type = RouteType.navigate,
   }) {
     this.page = page ?? MaterialPage(child: Container());
@@ -79,6 +87,7 @@ class RouteEntity {
     RouteBuilder? routeBuilder,
     RouteType? type,
     Page? page,
+    PopCallback? popCallback,
     dynamic arguments,
     Map<String, dynamic>? params,
   }) {
@@ -92,6 +101,7 @@ class RouteEntity {
       params: params ?? this.params,
       key: key ?? this.key,
       parent: parent ?? this.parent,
+      popCallback: popCallback ?? this.popCallback,
     );
   }
 

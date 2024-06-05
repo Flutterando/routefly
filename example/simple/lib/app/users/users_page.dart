@@ -2,6 +2,8 @@ import 'package:example/routes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
+import '../app_page.dart';
+
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
 
@@ -18,11 +20,22 @@ class _UsersPageState extends State<UsersPage> {
         title: Text('Users $count'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Routefly.push(routePaths.users.$id.changes({'idx': '2'}));
-          },
-          child: const Text('Usuario 2'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Routefly.pop<WillClass>(context, result: WillClass('Will pedido'));
+              },
+              child: const Text('Voltar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Routefly.push(routePaths.users.$id.changes({'idx': '2'}));
+              },
+              child: const Text('Usuario 2'),
+            ),
+          ],
         ),
       ),
     );
