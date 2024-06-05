@@ -84,9 +84,8 @@ List<RouteEntity> get routes => [
 ];
 
 ${generateRecords(paths)}''';
-
     routeFile.writeAsStringSync(routeFileContent);
-
+    Process.runSync('dart', ['format', routeFile.path]);
     yield const ConsoleResponse(
       message: 'Generated! lib/routes.g.dart 🚀',
       type: ConsoleResponseType.success,
