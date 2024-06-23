@@ -32,13 +32,14 @@ Future<void> main(List<String> args) async {
 Map<String, dynamic> _listStringToMap(List<String> list) {
   final map = <String, dynamic>{};
   for (var i = 0; i < list.length; i++) {
-    if (list[i].startsWith('--')) {
-      if (!list[i].contains('=')) {
-        map[list[i].substring(2)] = true;
+    final flag = list[i];
+    if (flag.startsWith('--')) {
+      if (!flag.contains('=')) {
+        map[flag.substring(2)] = true;
         continue;
       }
-      final key = list[i].substring(2, list[i].indexOf('='));
-      final value = list[i].substring(list[i].indexOf('=') + 1);
+      final key = flag.substring(2, flag.indexOf('='));
+      final value = flag.substring(flag.indexOf('=') + 1);
       map[key] = value;
     }
   }
