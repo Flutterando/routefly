@@ -34,12 +34,13 @@ Map<String, dynamic> _listStringToMap(List<String> list) {
   for (var i = 0; i < list.length; i++) {
     final flag = list[i];
     if (flag.startsWith('--')) {
-      if (!flag.contains('=')) {
+      final equalsIndex = flag.indexOf('=');
+      if (equalsIndex < 0) {
         map[flag.substring(2)] = true;
         continue;
       }
-      final key = flag.substring(2, flag.indexOf('='));
-      final value = flag.substring(flag.indexOf('=') + 1);
+      final key = flag.substring(2, equalsIndex);
+      final value = flag.substring(equalsIndex + 1);
       map[key] = value;
     }
   }
