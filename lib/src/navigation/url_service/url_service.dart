@@ -16,6 +16,7 @@ abstract class UrlService {
     if (uri.hasFragment) {
       return uri.fragment;
     }
-    return uri.path;
+    final pathAndQuery = uri.path + (uri.hasQuery ? '?${uri.query}' : '');
+    return pathAndQuery.isEmpty ? '/' : pathAndQuery;
   }
 }

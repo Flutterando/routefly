@@ -1,5 +1,9 @@
 ## 2.0.2
 
+* Fix: Web href queries;
+
+## 2.0.2
+
 * Fix: push return result;
 
 ## 2.0.1
