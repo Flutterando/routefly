@@ -91,11 +91,8 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
       currentConfiguration = configuration;
     } else if (configuration.type == RouteType.pushNavigate) {
       final acrossRoutes = _across(routes);
-      configurations.addAll(
-        acrossRoutes.where((element) {
-          return !configurations.contains(element);
-        }),
-      );
+      configurations.removeWhere(acrossRoutes.contains);
+      configurations.addAll(acrossRoutes);
       currentConfiguration = configuration;
     } else if (configuration.type == RouteType.replace) {
       configurations.removeLast();

@@ -1,4 +1,8 @@
-## 2.0.2
+## 2.0.4
+
+* Fix: Fix pushNavigation
+
+## 2.0.3
 
 * Fix: Web href queries;
 
