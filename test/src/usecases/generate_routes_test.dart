@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:routefly/src/entities/main_file_entity.dart';
 import 'package:routefly/src/entities/route_representation.dart';
 import 'package:routefly/src/usecases/generate_routes.dart';
 
@@ -79,7 +80,7 @@ void main() {
   });
 
   test('snack case to camel', () {
-    final usecase = GenerateRoutes(appDir, routeFile);
+    const usecase = GenerateRoutes();
 
     expect(usecase.snackCaseToCamelCase('test_camel_case'), 'testCamelCase');
     expect(usecase.snackCaseToCamelCase('test_one'), 'testOne');
@@ -88,7 +89,7 @@ void main() {
 
   test('Generate routePahtStrings', () {
     final notExistsDir = Directory('./test2');
-    final usecase = GenerateRoutes(notExistsDir, routeFile);
+    const usecase = GenerateRoutes();
     final paths = <String>[
       '/',
       '/dashboard',
@@ -124,8 +125,10 @@ void main() {
 
   test('return message if appDir not exists', () {
     final notExistsDir = Directory('./test2');
-    final usecase = GenerateRoutes(notExistsDir, routeFile);
-    final stream = usecase.call();
+    const usecase = GenerateRoutes();
+    final stream = usecase.call(
+      MainFileEntity(generatedFile: routeFile, appDir: notExistsDir),
+    );
 
     final response = ConsoleResponse(
       message: errorMessages.notFoundDirApp,
@@ -137,19 +140,23 @@ void main() {
 
   test('return message if files is empty', () {
     final existsDir = Directory('./test/mocks/app2');
-    final usecase = GenerateRoutes(existsDir, routeFile);
+    const usecase = GenerateRoutes();
     final response = ConsoleResponse(
       message: errorMessages.noRoutesCreated,
     );
 
-    final stream = usecase.call();
+    final stream = usecase.call(
+      MainFileEntity(generatedFile: routeFile, appDir: existsDir),
+    );
 
     expect(stream, emits(response));
   });
 
   test('Generate Routes', () async {
-    final usecase = GenerateRoutes(appDir, routeFile);
-    final stream = usecase.call();
+    const usecase = GenerateRoutes();
+    final stream = usecase.call(
+      MainFileEntity(generatedFile: routeFile, appDir: appDir),
+    );
 
     await expectLater(
       stream,

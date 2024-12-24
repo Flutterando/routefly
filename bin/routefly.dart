@@ -1,24 +1,25 @@
 import 'dart:io';
 
+import 'package:routefly/src/usecases/find_main_file.dart';
 import 'package:routefly/src/usecases/generate_routes.dart';
 
 Future<void> main(List<String> args) async {
   final flag = args.isEmpty ? '--generate' : args.first;
 
-  final appDir = Directory('./lib/app');
-  final routeFile = File('${appDir.parent.path}/routes.g.dart');
-
-  final generate = GenerateRoutes(appDir, routeFile);
+  const findMainFile = FindMainFile();
+  const generate = GenerateRoutes();
 
   Stream<ConsoleResponse>? stream;
 
   if (flag == '--generate') {
-    stream = generate.call();
+    final (mainFile, console) = findMainFile.call(Directory('lib'));
+    if (console != null) {
+      console.log();
+      exit(1);
+    }
+    stream = generate.call(mainFile!);
   } else if (flag == '--watch') {
-    stream = _startWatch(generate, appDir);
-  } else if (flag == '--init') {
-    _init(generate, appDir);
-    exit(0);
+    stream = _startWatch(generate, findMainFile);
   }
 
   if (stream != null) {
@@ -30,11 +31,19 @@ Future<void> main(List<String> args) async {
 
 Stream<ConsoleResponse> _startWatch(
   GenerateRoutes generate,
-  Directory appDir,
+  FindMainFile find,
 ) async* {
-  yield* generate();
+  final lib = Directory('lib');
+  final (mainFile, console) = find.call(lib);
+  if (console != null) {
+    yield console;
+  }
+
+  if (mainFile != null) {
+    yield* generate(mainFile);
+  }
   yield const ConsoleResponse(message: '-- WATCHING --');
-  yield* appDir
+  yield* lib
       .watch(recursive: true) //
       .where(
         (event) =>
@@ -42,51 +51,14 @@ Stream<ConsoleResponse> _startWatch(
             ||
             event.path.endsWith('_layout.dart'),
       )
-      .asyncExpand((event) => generate());
-}
+      .asyncExpand((event) async* {
+    final (mainFile, console) = find.call(lib);
+    if (console != null) {
+      yield console;
+    }
 
-void _init(GenerateRoutes generate, Directory appDir) {
-  final appWidget = File('${appDir.path}/app_widget.dart');
-  final appPage = File('${appDir.path}/app_page.dart');
-
-  if (appWidget.existsSync() || appPage.existsSync()) {
-    return;
-  }
-
-  appWidget.createSync(recursive: true);
-  appPage.createSync(recursive: true);
-
-  appWidget.writeAsStringSync('''
-import 'package:flutter/material.dart';
-import 'package:routefly/routefly.dart';
-
-import '../routes.dart';
-
-class AppWidget extends StatelessWidget {
-  const AppWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: Routefly.routerConfig(
-        routes: routes,
-      ),
-    );
-  }
-}
-''');
-  appPage.writeAsStringSync('''
-import 'package:flutter/material.dart';
-
-class AppPage extends StatelessWidget {
-  const AppPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-''');
-
-  generate();
+    if (mainFile != null) {
+      yield* generate(mainFile);
+    }
+  });
 }
