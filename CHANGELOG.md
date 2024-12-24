@@ -1,3 +1,8 @@
+## 3.0.0
+
+* Introduce @Main annotation to selected watch folder.
+* Remove CLI --init flag
+
 ## 2.0.4
 
 * Fix: Fix pushNavigation
