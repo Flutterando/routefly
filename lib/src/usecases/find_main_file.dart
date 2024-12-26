@@ -66,11 +66,6 @@ class FindMainFile {
       return false;
     }
 
-    final hasRouteflyImport = content.contains("import 'package:routefly/routefly.dart';");
-    if (!hasRouteflyImport) {
-      return false;
-    }
-
     final routeImport = content.contains("import '${_fileNameGenerated(mainFile, '.route.dart')}';");
     if (!routeImport) {
       return false;
