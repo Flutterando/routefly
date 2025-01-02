@@ -1,8 +1,8 @@
-import 'package:example/routes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:routefly/routefly.dart';
 
 import '../app_page.dart';
+import '../app_widget.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});

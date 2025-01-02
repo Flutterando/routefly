@@ -23,6 +23,8 @@ class RouteRepresentation {
   /// Index for managing route instances.
   final int index;
 
+  final String routeBuilderFunction;
+
   /// Constructs a new [RouteRepresentation].
   ///
   /// Parameters:
@@ -37,6 +39,7 @@ class RouteRepresentation {
     required this.path,
     required this.file,
     this.parent = '',
+    this.routeBuilderFunction = '',
     required this.index,
     this.isLayout = false,
     required this.builder,
@@ -55,12 +58,14 @@ class RouteRepresentation {
   ) {
     final isLayout = file.path.endsWith('layout.dart');
     final path = pathResolve(file, appDir);
-    final builder = _getBuilder(file, index);
+    final routeBuilderFunction = _getBuilder(file, index);
+    final builder = 'b${index}Builder';
 
     return RouteRepresentation(
       isLayout: isLayout,
       path: path,
       builder: builder,
+      routeBuilderFunction: routeBuilderFunction,
       file: file,
       index: index,
     );
@@ -135,19 +140,21 @@ class RouteRepresentation {
         .replaceFirst(RegExp(' extends.+'), '');
 
     if (routeBuilderLine.isNotEmpty) {
-      return 'a$index.routeBuilder';
+      return 'Route b${index}Builder(BuildContext context, RouteSettings settings) => a$index.routeBuilder(context, settings);';
     }
 
-    return '''(ctx, settings) => Routefly.defaultRouteBuilder(
+    return '''Route b${index}Builder(BuildContext ctx, RouteSettings settings) => Routefly.defaultRouteBuilder(
       ctx,
       settings,
       const a$index.$className(),
-    )''';
+    );''';
   }
 
   /// Generates the import statement for the route.
-  String get import {
-    final path = file.path.replaceFirst('./lib/', '').replaceAll(r'\', '/');
+  String getImport(String mainFilePath) {
+    final parent = File(mainFilePath).parent.path;
+    final fixPath = parent.isEmpty ? '${Platform.pathSeparator}lib${Platform.pathSeparator}' : '$parent${Platform.pathSeparator}';
+    final path = file.path.replaceFirst(fixPath, '').replaceAll(r'\', '/');
     return "import '$path' as a$index;";
   }
 

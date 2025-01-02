@@ -19,11 +19,20 @@ To get started with Routefly, follow these steps:
    flutter pub add routefly
 ```
 
-2. Modify your MaterialApp or CupertinoApp by replacing it with MaterialApp.router or CupertinoApp.router. Configure the router using the Routefly.routerConfig method:
+2. You will need to add the `@Main()` annotation to the main Widget (usually the one containing MaterialApp or CupertinoApp). After adding the necessary imports and parts, the code will be ready to generate the routes.
+
+It is also necessary to use Navigator 2.0, accessed through the `MaterialApp.router` or `CupertinoApp.router` constructor, adding the custom `routerConfig` from `Routefly`:
+
 
 ```dart
-import 'package:routefly/routefly.dart';
+// file: my_app.dart
 
+import 'package:routefly/routefly.dart';
+import 'my_app.route.dart' // <- GENERATED
+
+part 'my_app.g.dart'; // <- GENERATED
+
+@Main('lib/app')
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -35,6 +44,9 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+
+O `@Main()` recebe por parametro a pasta que será usada pelo `Routefly` como base para procurar as paginas.
+A pasta base padrão é `lib/app`;
 
 3. Organize your code by creating folders that contain a *_page.dart file for each page. 
 For example:
