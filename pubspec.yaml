@@ -1,6 +1,6 @@
 name: routefly
 description: Folder-based route manager inspired by NextJS and created by the Flutterando community.
-version: 3.0.0-alpha.2
+version: 3.0.0
 repository: https://github.com/Flutterando/routefly
 
 environment:

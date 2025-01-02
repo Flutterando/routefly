@@ -11,6 +11,7 @@ class Myapp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    test();
     return const Placeholder();
   }
 }

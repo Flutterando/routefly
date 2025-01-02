@@ -11,9 +11,12 @@ import 'package:routefly/src/usecases/generate_routes.dart';
   return (mainFile, response);
 }
 
+/// Find the main file of the project
 class FindMainFile {
+  /// Find the main file of the project
   const FindMainFile();
 
+  /// Find the main file of the project
   (MainFileEntity?, ConsoleResponse?) call(Directory appDir) {
     final mainFile = findMainFile(appDir);
     if (mainFile == null) {
@@ -35,6 +38,7 @@ class FindMainFile {
     );
   }
 
+  /// Find the main file of the project
   @visibleForTesting
   File? findMainFile(Directory appDir) {
     return appDir //
@@ -44,6 +48,7 @@ class FindMainFile {
         .firstWhere(validateMainFile, orElse: () => null);
   }
 
+  /// Get the base path of the project
   @visibleForTesting
   Directory getBasePath(File mainFile) {
     final content = mainFile.readAsStringSync();
@@ -57,6 +62,7 @@ class FindMainFile {
     return Directory(basePath ?? 'lib/');
   }
 
+  /// Validate if the file has the correct annotation and imports
   @visibleForTesting
   bool validateMainFile(File? mainFile) {
     final content = mainFile!.readAsStringSync();
@@ -66,7 +72,8 @@ class FindMainFile {
       return false;
     }
 
-    final routeImport = content.contains("import '${_fileNameGenerated(mainFile, '.route.dart')}';");
+    final routeImport = content //
+        .contains("import '${_fileNameGenerated(mainFile, '.route.dart')}';");
     if (!routeImport) {
       return false;
     }
@@ -87,11 +94,5 @@ class FindMainFile {
 
   String _removeExtension(String path) {
     return path.replaceAll('.dart', '');
-  }
-
-  String _pathToGeneratedFile(File mainFile) {
-    final fileName = mainFile.path.split(Platform.pathSeparator).last;
-    final newFileName = _fileNameGenerated(mainFile);
-    return mainFile.path.replaceFirst(fileName, newFileName);
   }
 }

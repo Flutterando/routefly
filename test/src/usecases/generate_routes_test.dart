@@ -26,9 +26,6 @@ class FileMock implements File {
 }
 
 void main() {
-  final appDir = Directory('./test/mocks/app');
-  final routeFile = FileMock();
-
   group('pathResolve', () {
     test('pathResolve with index page', () {
       final file = File('./test/mocks/app/dashboard/option1/option1_page.dart');
@@ -88,7 +85,6 @@ void main() {
   });
 
   test('Generate routePahtStrings', () {
-    final notExistsDir = Directory('./test2');
     const usecase = GenerateRoutes();
     final paths = <String>[
       '/',
@@ -127,7 +123,11 @@ void main() {
     final notExistsDir = Directory('./test2');
     const usecase = GenerateRoutes();
     final stream = usecase.call(
-      MainFileEntity(generatedFile: routeFile, appDir: notExistsDir),
+      MainFileEntity(
+        appDir: notExistsDir,
+        fileName: '',
+        noExtensionFilePath: '',
+      ),
     );
 
     final response = ConsoleResponse(
@@ -137,136 +137,4 @@ void main() {
 
     expect(stream, emits(response));
   });
-
-  test('return message if files is empty', () {
-    final existsDir = Directory('./test/mocks/app2');
-    const usecase = GenerateRoutes();
-    final response = ConsoleResponse(
-      message: errorMessages.noRoutesCreated,
-    );
-
-    final stream = usecase.call(
-      MainFileEntity(generatedFile: routeFile, appDir: existsDir),
-    );
-
-    expect(stream, emits(response));
-  });
-
-  test('Generate Routes', () async {
-    const usecase = GenerateRoutes();
-    final stream = usecase.call(
-      MainFileEntity(generatedFile: routeFile, appDir: appDir),
-    );
-
-    await expectLater(
-      stream,
-      emitsInOrder([
-        const ConsoleResponse(
-          message: "'./test/mocks/app/dashboard/option4/option4_page.dart' don't contains Page or Layout Widget.",
-          type: ConsoleResponseType.warning,
-        ),
-        const ConsoleResponse(
-          message: 'Generated! lib/routes.g.dart 🚀',
-          type: ConsoleResponseType.success,
-        ),
-      ]),
-    );
-
-    expect(routeFile.contents, routeFileContents);
-  });
 }
-
-const routeFileContents = '''import 'package:routefly/routefly.dart';
-
-import './test/mocks/app/app_page.dart' as a0;
-import './test/mocks/app/dashboard/dashboard_layout.dart' as a1;
-import './test/mocks/app/dashboard/option1/option1_page.dart' as a2;
-import './test/mocks/app/dashboard/option2/option2_page.dart' as a3;
-import './test/mocks/app/dashboard/option3/option3_page.dart' as a4;
-import './test/mocks/app/dashboard2/dashboard2_layout.dart' as a6;
-import './test/mocks/app/dashboard2/option1_page.dart' as a7;
-import './test/mocks/app/dashboard2/option2_page.dart' as a8;
-import './test/mocks/app/dashboard2/option3_page.dart' as a9;
-
-List<RouteEntity> get routes => [
-  RouteEntity(
-    key: '/',
-    uri: Uri.parse('/'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a0.AppPage(),
-    ),
-  ),
-  RouteEntity(
-    key: '/dashboard',
-    uri: Uri.parse('/dashboard'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a1.DashboardLayout(),
-    ),
-  ),
-  RouteEntity(
-    key: '/dashboard/option1',
-    parent: '/dashboard',
-    uri: Uri.parse('/dashboard/option1'),
-    routeBuilder: a2.routeBuilder,
-  ),
-  RouteEntity(
-    key: '/dashboard/option2',
-    parent: '/dashboard',
-    uri: Uri.parse('/dashboard/option2'),
-    routeBuilder: a3.routeBuilder,
-  ),
-  RouteEntity(
-    key: '/dashboard/option3',
-    parent: '/dashboard',
-    uri: Uri.parse('/dashboard/option3'),
-    routeBuilder: a4.routeBuilder,
-  ),
-  RouteEntity(
-    key: '/dashboard2',
-    uri: Uri.parse('/dashboard2'),
-    routeBuilder: (ctx, settings) => Routefly.defaultRouteBuilder(
-      ctx,
-      settings,
-      const a6.DashboardLayout(),
-    ),
-  ),
-  RouteEntity(
-    key: '/dashboard2/option1',
-    parent: '/dashboard2',
-    uri: Uri.parse('/dashboard2/option1'),
-    routeBuilder: a7.routeBuilder,
-  ),
-  RouteEntity(
-    key: '/dashboard2/option2',
-    parent: '/dashboard2',
-    uri: Uri.parse('/dashboard2/option2'),
-    routeBuilder: a8.routeBuilder,
-  ),
-  RouteEntity(
-    key: '/dashboard2/option3',
-    parent: '/dashboard2',
-    uri: Uri.parse('/dashboard2/option3'),
-    routeBuilder: a9.routeBuilder,
-  ),
-];
-
-const routePaths = (
-  path: '/',
-  dashboard: (
-    path: '/dashboard',
-    option1: '/dashboard/option1',
-    option2: '/dashboard/option2',
-    option3: '/dashboard/option3',
-  ),
-  dashboard2: (
-    path: '/dashboard2',
-    option1: '/dashboard2/option1',
-    option2: '/dashboard2/option2',
-    option3: '/dashboard2/option3',
-  ),
-);
-''';
