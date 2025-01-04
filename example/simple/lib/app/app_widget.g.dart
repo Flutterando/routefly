@@ -4,23 +4,23 @@ part of 'app_widget.dart';
 
 List<RouteEntity> get routes => [
       RouteEntity(
-        key: '/guarded',
-        uri: Uri.parse('/guarded'),
+        key: 'guarded',
+        uri: Uri.parse('guarded'),
         routeBuilder: b0Builder,
       ),
       RouteEntity(
-        key: '/users/[id]',
-        uri: Uri.parse('/users/[id]'),
+        key: 'users/[id]',
+        uri: Uri.parse('users/[id]'),
         routeBuilder: b1Builder,
       ),
       RouteEntity(
-        key: '/users',
-        uri: Uri.parse('/users'),
+        key: 'users',
+        uri: Uri.parse('users'),
         routeBuilder: b2Builder,
       ),
       RouteEntity(
-        key: '/',
-        uri: Uri.parse('/'),
+        key: 'lib/app',
+        uri: Uri.parse('lib/app'),
         routeBuilder: b3Builder,
       ),
     ];
@@ -31,5 +31,9 @@ const routePaths = (
   users: (
     path: '/users',
     $id: '/users/[id]',
+  ),
+  lib: (
+    path: '/lib',
+    app: '/lib/app',
   ),
 );

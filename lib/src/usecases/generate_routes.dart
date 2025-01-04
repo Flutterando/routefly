@@ -33,7 +33,7 @@ class GenerateRoutes {
 
     if (!appDir.existsSync()) {
       yield ConsoleResponse(
-        message: errorMessages.notFoundDirApp,
+        message: '${errorMessages.notFoundDirApp}: ${appDir.path}',
         type: ConsoleResponseType.error,
       );
       return;

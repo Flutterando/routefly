@@ -29,24 +29,26 @@ void main() {
     expect(file?.path, './test/mocks/find/main.dart');
   });
 
-  test('Get basePath, suffix from @Main', () async {
-    final (baseDir, suffix) = const FindMainFile().getAnnotationInfos(FileMock('@Main("lib/app/", "view")'));
+  group('get annotation infos | ', () {
+    test('Get basePath, suffix from @Main', () async {
+      final (baseDir, suffix) = const FindMainFile().getAnnotationInfos(FileMock('@Main("lib/ui/", "view")'));
 
-    expect(baseDir.path, 'lib/app/');
-    expect(suffix, 'view');
-  });
+      expect(baseDir.path, 'lib/ui/');
+      expect(suffix, 'view');
+    });
 
-  test('Get basePath from @Main', () async {
-    final (baseDir, suffix) = const FindMainFile().getAnnotationInfos(FileMock('@Main("lib/app/")'));
+    test('Get basePath from @Main only baseDir', () async {
+      final (baseDir, suffix) = const FindMainFile().getAnnotationInfos(FileMock('    @Main("lib/ui/")'));
 
-    expect(baseDir.path, 'lib/app/');
-    expect(suffix, 'page');
-  });
+      expect(baseDir.path, 'lib/ui/');
+      expect(suffix, 'page');
+    });
 
-  test('Get basePath from @Main', () async {
-    final (baseDir, suffix) = const FindMainFile().getAnnotationInfos(FileMock('@Main()'));
+    test('Get basePath from @Main withless params', () async {
+      final (baseDir, suffix) = const FindMainFile().getAnnotationInfos(FileMock('@Main()'));
 
-    expect(baseDir.path, 'lib/app/');
-    expect(suffix, 'page');
+      expect(baseDir.path, 'lib/app/');
+      expect(suffix, 'page');
+    });
   });
 }

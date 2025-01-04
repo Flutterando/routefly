@@ -53,7 +53,7 @@ class FindMainFile {
   @visibleForTesting
   (Directory, String) getAnnotationInfos(File mainFile) {
     final content = mainFile.readAsStringSync();
-    final regex = RegExp(r'@Main\((.*),(.*)\)');
+    final regex = RegExp(r'@Main\(\s*([^,)]*)\s*(?:,\s*([^)]*)\s*)?\)');
 
     final match = regex.firstMatch(content);
     final basePath = match //
@@ -70,7 +70,10 @@ class FindMainFile {
             .trim() ??
         'page';
 
-    return (Directory(basePath), pageSuffix);
+    return (
+      Directory(basePath.isEmpty ? 'lib/app/' : basePath),
+      pageSuffix.isEmpty ? 'page' : pageSuffix,
+    );
   }
 
   /// Validate if the file has the correct annotation and imports
