@@ -28,11 +28,12 @@ class FindMainFile {
       );
     }
 
-    final baseDir = getBasePath(mainFile);
+    final (baseDir, pageSuffix) = getAnnotationInfos(mainFile);
     return _result(
       mainFile: MainFileEntity(
         noExtensionFilePath: _removeExtension(mainFile.path),
         appDir: baseDir,
+        pageSuffix: pageSuffix,
         fileName: _fileNameGenerated(mainFile, ''),
       ),
     );
@@ -50,16 +51,26 @@ class FindMainFile {
 
   /// Get the base path of the project
   @visibleForTesting
-  Directory getBasePath(File mainFile) {
+  (Directory, String) getAnnotationInfos(File mainFile) {
     final content = mainFile.readAsStringSync();
-    final regex = RegExp(r'@Main\((.*)\)');
+    final regex = RegExp(r'@Main\((.*),(.*)\)');
+
     final match = regex.firstMatch(content);
     final basePath = match //
-        ?.group(1)
-        ?.replaceAll('"', '')
-        .replaceAll("'", '')
-        .trim();
-    return Directory(basePath ?? 'lib/');
+            ?.group(1)
+            ?.replaceAll('"', '')
+            .replaceAll("'", '')
+            .trim() ??
+        'lib/app/';
+
+    final pageSuffix = match //
+            ?.group(2)
+            ?.replaceAll('"', '')
+            .replaceAll("'", '')
+            .trim() ??
+        'page';
+
+    return (Directory(basePath), pageSuffix);
   }
 
   /// Validate if the file has the correct annotation and imports

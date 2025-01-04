@@ -23,6 +23,7 @@ class RouteRepresentation {
   /// Index for managing route instances.
   final int index;
 
+  /// The function used to build the route.
   final String routeBuilderFunction;
 
   /// Constructs a new [RouteRepresentation].
@@ -53,12 +54,13 @@ class RouteRepresentation {
   /// - [index]: Index for managing route instances.
   static RouteRepresentation withAppDir(
     Directory appDir,
+    String widgetSuffix,
     File file,
     int index,
   ) {
     final isLayout = file.path.endsWith('layout.dart');
     final path = pathResolve(file, appDir);
-    final routeBuilderFunction = _getBuilder(file, index);
+    final routeBuilderFunction = _getBuilder(file, widgetSuffix, index);
     final builder = 'b${index}Builder';
 
     return RouteRepresentation(
@@ -108,7 +110,7 @@ class RouteRepresentation {
   }
 
   /// Fetches the builder function from the given [file].
-  static String _getBuilder(File file, int index) {
+  static String _getBuilder(File file, String widgetSuffix, int index) {
     final content = file.readAsLinesSync();
 
     for (var i = 0; i < content.length; i++) {
@@ -118,7 +120,7 @@ class RouteRepresentation {
     }
 
     final line = content.firstWhere(
-      (line) => line.contains(RegExp(r'class \w+[(Page)|(Layout)] ')),
+      (line) => line.contains(RegExp('class \\w+[($widgetSuffix)|(Layout)] ')),
       orElse: () => '',
     );
 
@@ -179,6 +181,8 @@ class RouteRepresentation {
     bool? isLayout,
     File? file,
     int? index,
+    String? routeBuilderFunction,
+    String? widgetSuffix,
   }) {
     return RouteRepresentation(
       path: path ?? this.path,
@@ -187,6 +191,7 @@ class RouteRepresentation {
       builder: builder ?? this.builder,
       isLayout: isLayout ?? this.isLayout,
       index: index ?? this.index,
+      routeBuilderFunction: routeBuilderFunction ?? this.routeBuilderFunction,
     );
   }
 }

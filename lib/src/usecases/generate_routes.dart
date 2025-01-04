@@ -51,7 +51,7 @@ class GenerateRoutes {
         .listSync(recursive: true) //
         .where(
           (file) =>
-              file.path.endsWith('_page.dart') //
+              file.path.endsWith('_${mainFile.pageSuffix}.dart') //
               ||
               file.path.endsWith('_layout.dart'),
         )
@@ -69,7 +69,7 @@ class GenerateRoutes {
 
     for (var i = 0; i < files.length; i++) {
       try {
-        entries.add(RouteRepresentation.withAppDir(appDir, files[i], i));
+        entries.add(RouteRepresentation.withAppDir(appDir, _capitalize(mainFile.pageSuffix), files[i], i));
       } on RouteflyException catch (e) {
         yield ConsoleResponse(
           message: e.message,
@@ -161,6 +161,10 @@ ${generateRecords(paths)}
     });
 
     return output.join('\n');
+  }
+
+  String _capitalize(String text) {
+    return text[0].toUpperCase() + text.substring(1);
   }
 
   /// Converts snake_case to camelCase.

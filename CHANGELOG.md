@@ -1,3 +1,7 @@
+## 3.1.0
+
+* Added page suffix.
+
 ## 3.0.0
 
 * Introduce @Main annotation to selected watch folder.
