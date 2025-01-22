@@ -154,8 +154,8 @@ class RouteRepresentation {
 
   /// Generates the import statement for the route.
   String getImport(String mainFilePath) {
-    final parent = File(mainFilePath).parent.path;
-    final fixPath = parent.isEmpty ? '${Platform.pathSeparator}lib${Platform.pathSeparator}' : '$parent${Platform.pathSeparator}';
+    final parent = File(mainFilePath).parent.path.replaceAll(r'\', '/');
+    final fixPath = parent.isEmpty ? '${Platform.pathSeparator}lib/' : '$parent/';
     final path = file.path.replaceFirst(fixPath, '').replaceAll(r'\', '/');
     return "import '$path' as a$index;";
   }

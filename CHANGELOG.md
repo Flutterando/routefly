@@ -1,3 +1,7 @@
+## 3.1.2
+
+* Fix windows
+
 ## 3.1.1
 
 * Added page suffix.
