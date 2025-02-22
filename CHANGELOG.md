@@ -1,3 +1,7 @@
+## 3.1.3
+
+* Fix generator
+
 ## 3.1.2
 
 * Fix windows
