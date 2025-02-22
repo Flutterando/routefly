@@ -69,7 +69,7 @@ class GenerateRoutes {
 
     for (var i = 0; i < files.length; i++) {
       try {
-        entries.add(RouteRepresentation.withAppDir(appDir, _capitalize(mainFile.pageSuffix), files[i], i));
+        entries.add(RouteRepresentation.withAppDir(appDir, _capitalize(mainFile.pageSuffix), files[i], i, mainFile.pageSuffix));
       } on RouteflyException catch (e) {
         yield ConsoleResponse(
           message: e.message,

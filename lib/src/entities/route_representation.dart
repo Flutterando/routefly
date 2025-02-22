@@ -57,9 +57,10 @@ class RouteRepresentation {
     String widgetSuffix,
     File file,
     int index,
+    String? suffix,
   ) {
     final isLayout = file.path.endsWith('layout.dart');
-    final path = pathResolve(file, appDir);
+    final path = pathResolve(file, appDir, suffix);
     final routeBuilderFunction = _getBuilder(file, widgetSuffix, index);
     final builder = 'b${index}Builder';
 
@@ -78,6 +79,7 @@ class RouteRepresentation {
   static String pathResolve(
     File file,
     Directory appDir,
+    [String? widgetSuffix,]
   ) {
     var path = file.path;
 
@@ -90,15 +92,19 @@ class RouteRepresentation {
         .where((e) => !RegExp(r'\(.+\)').hasMatch(e))
         .join('/');
 
-    path = _removeSuffix(path);
+    path = _removeSuffix(path, widgetSuffix);
     path = path.replaceFirst(appDir.path, '');
 
     return path.isEmpty ? '/' : path;
   }
 
-  static String _removeSuffix(String path) {
+  static String _removeSuffix(String path, String? widgetSuffix) {
     // Remover sufixo
-    var newPath = path.replaceAll(RegExp(r'(_page|_layout)\.dart$'), '');
+    var newPath = path.replaceAll(RegExp(r'(_page|_layout|widgetSuffix)\.dart$'), '');
+
+    if (widgetSuffix != null) {
+      newPath = newPath.replaceAll('_$widgetSuffix.dart', '');
+    }
 
     // Remover duplicação após a última barra
     final lastPart = newPath.split('/').last;
@@ -155,7 +161,8 @@ class RouteRepresentation {
   /// Generates the import statement for the route.
   String getImport(String mainFilePath) {
     final parent = File(mainFilePath).parent.path.replaceAll(r'\', '/');
-    final fixPath = parent.isEmpty ? '${Platform.pathSeparator}lib/' : '$parent/';
+    final fixPath =
+        parent.isEmpty ? '${Platform.pathSeparator}lib/' : '$parent/';
     final path = file.path.replaceFirst(fixPath, '').replaceAll(r'\', '/');
     return "import '$path' as a$index;";
   }

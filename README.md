@@ -28,7 +28,7 @@ It is also necessary to use Navigator 2.0, accessed through the `MaterialApp.rou
 // file: my_app.dart
 
 import 'package:routefly/routefly.dart';
-import 'my_app.route.dart' // <- GENERATED
+import 'my_app.route.dart'; // <- GENERATED
 
 part 'my_app.g.dart'; // <- GENERATED
 
