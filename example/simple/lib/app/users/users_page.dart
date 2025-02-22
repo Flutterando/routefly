@@ -31,7 +31,7 @@ class _UsersPageState extends State<UsersPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Routefly.push(routePaths.users.$id.changes({'idx': '2'}));
+                Routefly.push(routePaths.users.$id.changes({'id': '2'}));
               },
               child: const Text('Usuario 2'),
             ),
