@@ -268,6 +268,7 @@ abstract class Routefly {
     RouteBuilderWithChild? routeBuilder,
     List<NavigatorObserver> observers = const [],
     List<RouteMiddleware> middlewares = const [],
+    GlobalKey<NavigatorState>? navigatorKey,
   }) {
     defaultRouteBuilder = routeBuilder ?? materialRouteBuilder;
 
@@ -290,10 +291,13 @@ abstract class Routefly {
       ),
     );
 
-    _delegate ??= RouteflyRouterDelegate([
-      HeroController(),
-      ...observers,
-    ]);
+    _delegate ??= RouteflyRouterDelegate(
+      [
+        HeroController(),
+        ...observers,
+      ],
+      navigatorKey ?? GlobalKey(),
+    );
 
     return RouterConfig(
       routerDelegate: _delegate!,
