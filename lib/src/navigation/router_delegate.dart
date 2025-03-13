@@ -14,7 +14,7 @@ import 'routefly_page.dart';
 class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     with
         ChangeNotifier {
-  final _navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _navigatorKey;
 
   /// A list of observers that listen to navigation events.
   final List<NavigatorObserver> observers;
@@ -26,7 +26,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
   /// Creates an instance of [RouteflyRouterDelegate].
   ///
   /// [observers]: A list of navigation event observers.
-  RouteflyRouterDelegate(this.observers);
+  RouteflyRouterDelegate(this.observers, this._navigatorKey);
 
   @override
   RouteEntity? currentConfiguration;
