@@ -16,7 +16,7 @@ import '../entities/route_representation.dart';
 const errorMessages = (
   notFoundDirApp: 'AppDir not exists😢',
   noRoutesCreated: 'No routes created😒',
-  noMainFile: 'No main file found😢. Please, add @Main in Widget that contain MaterialApp/CurpetinoApp',
+  noMainFile: 'No main file found😢. Please, add @Main in Widget that contain MaterialApp/CupertinoApp',
 );
 
 /// Class to generate routes.

@@ -49,8 +49,8 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-O `@Main()` recebe por parametro a pasta que será usada pelo `Routefly` como base para procurar as paginas.
-A pasta base padrão é `lib/app`;
+The `@Main()` takes a parameter for the folder that will be used by `Routefly` as the base to look for pages.
+The default base folder is `lib/app`;
 
 3. Organize your code by creating folders that contain a *_page.dart file for each page. 
 For example:
